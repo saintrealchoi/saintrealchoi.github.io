@@ -102,13 +102,13 @@
         </div>
       </div>
     
-      <div class="post-item" title="Algorithm  ������ �簢��">
+      <div class="post-item" title="Algorithm">
         <div class="time-m-d">2021-01-10</div>
         <div class="title">
           <a href="/2021/01/10/Algorithm-%EB%A9%80%EC%A9%A1%ED%95%9C-%EC%82%AC%EA%B0%81%ED%98%95/">
             
               
-                <span>Algorithm  ������ �簢��</span>
+                <span>Algorithm</span>
               
             
           </a>
@@ -187,7 +187,7 @@
           </a>
         </span>
         
-          <input type="text" class="search-input" id="search-input" placeholder="검색">
+          <input type="text" class="search-input" id="search-input" placeholder="Search...">
         
         <span class="search-close-icon" id="search-close-icon">
           <a href="javascript: void(0)">
@@ -239,7 +239,7 @@
       'use strict';
       var $input = document.getElementById(search_id);
       var $resultContent = document.getElementById(content_id);
-      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
       $.ajax({
         // 0x01. load xml file
         url: path,
@@ -335,7 +335,7 @@
             });
             str += "</ul>";
             if (str.indexOf('<li>') === -1) {
-              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
             }
             $resultContent.innerHTML = str;
           });
