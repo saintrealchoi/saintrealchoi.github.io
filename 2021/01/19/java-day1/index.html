@@ -131,8 +131,7 @@
           
       </div>
       <div class="markdown-body">
-        <h2 id="1-JVM이란"><a href="#1-JVM이란" class="headerlink" title="1. JVM이란?"></a>1. JVM이란?</h2><hr>
-<h3 id="JVM의-용도와-정의"><a href="#JVM의-용도와-정의" class="headerlink" title="JVM의 용도와 정의"></a>JVM의 용도와 정의</h3><hr>
+        <h2 id="1-JVM이란"><a href="#1-JVM이란" class="headerlink" title="1. JVM이란?"></a>1. JVM이란?</h2><h3 id="JVM의-용도와-정의"><a href="#JVM의-용도와-정의" class="headerlink" title="JVM의 용도와 정의"></a>JVM의 용도와 정의</h3><hr>
 <p>JVM에는 2가지 기본 기능이 있다.<br> 첫번째로 자바 프로그램이 어느 기기, 또는 어느 운영체제 상에서도 실행될 수 있게 하는 것과 프로그램 메모리를 관리하고 최적화하는 것이다. 이에 대해서는 JVM 구성요소에서 자세히 다뤄보겠다.<br> 가장 유명한 원칙인 “한 번 작성해, 어디에서나 실행한다.(Write Once, Run Anywhere, WORA)”가 바로 이것이다. 즉, 자바 애플리케이션은 JVM 위에서 동작하기 때문에 JVM에 종속적이나, OS와 하드웨어와는 독립적이라 프로그램의 변경없이 실행이 가능하다.<br>자바가 나온 시점에는 메모리관리와 OS와 하드웨어 의존성이 있었기 때문에 이는 큰 장점이기도 했다.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- 기술적 정의 : JVM은 코드를 실행하고 해당 코드에 대해 런타임 환경을 제공하는 소프트웨어 프로그램에 대한 사양(Specification)이다.</span><br><span class="line">- 일반적 정의 : JVM은 자바 프로그램을 실행하는 방법이다. JVM의 설정을 구성한 다음 설정사항에 따라 실행 중에 프로그램 리소스를 관리한다.</span><br></pre></td></tr></table></figure>
 <h3 id="Garbage-Collection"><a href="#Garbage-Collection" class="headerlink" title="Garbage Collection"></a><strong>Garbage Collection</strong></h3><p> 자바 이전에는 프로그래머가 모든 프로그램 메모리를 관리했었다. 자바에서는 JVM이 프로그램 메모리를 관리한다. JVM은 가비지 컬렉션이란 프로세스를 통해 메모리를 관리하며, 이는 프로그램에서 사용되지 않는 메모리를 지속적으로 찾아내서 제거한다. 즉, 실행중인 JVM내부에서 일어난다.<br> 그럼 왜 많은 개발자들이 C나 C++같이 메모리관리를 직접해야하는 언어를 사용하냐는 생각이 들 수 있다. 하지만 편리함에는 대가를 치루는 법. 앞서 말했듯 JVM이 지속적으로 가비지 컬렉션을 하기 때문에 시간이 그만큼 많이 들어간다. 하지만, 직접관리를 한다면 그 시간을 줄일 수 있을 것이다. 그래서 초창기 자바의 가비지컬렉션에 대해 속도측면에서 많이 까였다. 하지만, 지금은 많은 개발과 최적화를 통해 크게 개선되어 메탈에 가까워졌다.</p>
