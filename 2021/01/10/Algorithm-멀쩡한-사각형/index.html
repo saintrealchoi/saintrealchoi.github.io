@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   
   
-  <title>Algorithm | 성진이의 기술 블로그</title>
+  <title>[Algorithm] | 성진이의 기술 블로그</title>
 
   
     <link rel="apple-touch-icon" href="/images/favicon.png">
@@ -100,15 +100,15 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">Algorithm</div>
+      <div class="post-title">[Algorithm]</div>
       <div class="post-attach">
         <span class="post-pubtime">
-          <i class="iconfont icon-updatetime" title="Update time"></i>
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
           2021-01-10
         </span>
         
               <span class="post-tags">
-                <i class="iconfont icon-tags" title="Tags"></i>
+                <i class="iconfont icon-tags" title="태그"></i>
                 
                 <span class="span--tag">
                   <a href="/tags/Algorithm/" title="Algorithm">
@@ -120,11 +120,11 @@
           
       </div>
       <div class="markdown-body">
-        <h1 id="���-���-Summer-Winter-Coding-2019"><a href="#���-���-Summer-Winter-Coding-2019" class="headerlink" title="��� ��� (Summer/Winter Coding(2019))"></a>��� ��� (Summer/Winter Coding(2019))</h1><hr>
-<h2 id="����"><a href="#����" class="headerlink" title="����"></a>����</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">�� ��� Wcm, �� ��� Hcm� ���� ��� ����. ���� ��, �� ��� ���� �� ��� �� ��� ���, �� ���� 1cm x 1cm �����. � ��� �� �� �� 1cm � 1cm� ������ �� ��� ������, ���� � ��� ��� ��� 2�� �� ���� �� �����.</span><br><span class="line"> ���� �� ���� ��� ��� �� ����� 2�� ���� �����. ��� ��� �� � �� ���� ���, � ���� �� ��� ��, �� ��� ���� 1cm � 1cm� �� ��� � �� ��� ����� �����.</span><br><span class="line"> ��� �� W� ��� �� H� ��� �, ��� � �� ����� ��� ��� solution ��� ��� ���.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <h1 id="멀쩡한-사각형-Summer-Winter-Coding-2019"><a href="#멀쩡한-사각형-Summer-Winter-Coding-2019" class="headerlink" title="멀쩡한 사각형 (Summer/Winter Coding(2019))"></a>멀쩡한 사각형 (Summer/Winter Coding(2019))</h1><hr>
+<h2 id="문제설명"><a href="#문제설명" class="headerlink" title="문제설명"></a>문제설명</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> 가로 길이가 Wcm, 세로 길이가 Hcm인 직사각형 종이가 있습니다. 종이에는 가로, 세로 방향과 평행하게 격자 형태로 선이 그어져 있으며, 모든 격자칸은 1cm x 1cm 크기입니다. 이 종이를 격자 선을 따라 1cm × 1cm의 정사각형으로 잘라 사용할 예정이었는데, 누군가가 이 종이를 대각선 꼭지점 2개를 잇는 방향으로 잘라 놓았습니다.</span><br><span class="line"> 그러므로 현재 직사각형 종이는 크기가 같은 직각삼각형 2개로 나누어진 상태입니다. 새로운 종이를 구할 수 없는 상태이기 때문에, 이 종이에서 원래 종이의 가로, 세로 방향과 평행하게 1cm × 1cm로 잘라 사용할 수 있는 만큼만 사용하기로 하였습니다.</span><br><span class="line">가로의 길이 W와 세로의 길이 H가 주어질 때, 사용할 수 있는 정사각형의 개수를 구하는 solution 함수를 완성해 주세요.</span><br></pre></td></tr></table></figure>
 <hr>
-<h2 id="����-1"><a href="#����-1" class="headerlink" title="����"></a>����</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">W, H : 1� ��� ���</span><br></pre></td></tr></table></figure>
-<h2 id="���-�"><a href="#���-�" class="headerlink" title="��� �"></a>��� �</h2><table>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">W, H : 1억 이하의 자연수</span><br></pre></td></tr></table></figure>
+<h2 id="입출력-예"><a href="#입출력-예" class="headerlink" title="입출력 예"></a>입출력 예</h2><table>
 <thead>
 <tr>
 <th>W</th>
@@ -139,18 +139,23 @@
 </tr>
 </tbody></table>
 <hr>
-<h2 id="���-�-��"><a href="#���-�-��" class="headerlink" title="��� � ��"></a>��� � ��</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">��� � #1</span><br><span class="line">��� 8, ��� 12� ����� ��� ���� ��� � 16� ����� ��� � �� ���. �� ������� 96�� ����� �� � �����, 96 - 16 &#x3D; 80 � �����.</span><br></pre></td></tr></table></figure>
+<h2 id="입출력-예-설명"><a href="#입출력-예-설명" class="headerlink" title="입출력 예 설명"></a>입출력 예 설명</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">입출력 예 #1</span><br><span class="line">가로가 8, 세로가 12인 직사각형을 대각선 방향으로 자르면 총 16개 정사각형을 사용할 수 없게 됩니다. 원래 직사각형에서는 96개의 정사각형을 만들 수 있었으므로, 96 - 16 &#x3D; 80 을 반환합니다.</span><br></pre></td></tr></table></figure>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://grepp-programmers.s3.amazonaws.com/files/production/ee895b2cd9/567420db-20f4-4064-afc3-af54c4a46016.png" alt="example"></p>
 <hr>
-<h2 id="����-2"><a href="#����-2" class="headerlink" title="����"></a>����</h2><p>��� ��� �� � �� ��� ��� ����� �����.<br>�� �� ��� ���� ��� �� �� ���� ��� ��� ������.</p>
-<p>5� �� �� ��� � �� ������� ��� � ��� ��� ��.</p>
-<p>���, ���� �� [���� ��� �� ��]� �� ��� ���.<br>[���� ��� �� ��] : <a target="_blank" rel="noopener" href="https://m.blog.naver.com/orbis1020/220664563768">https://m.blog.naver.com/orbis1020/220664563768</a><br><br><br><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://mblogthumb-phinf.pstatic.net/20160324_159/orbis1020_1458747302465IxfMV_PNG/%B0%DD%C0%DA.png?type=w2" alt="example"></p>
-<p>���� 5��� ������ ��� ���� ���. ��. 4����� ���! (..���)</p>
-<p>��� �� ���� �� ��� �� ���� ���� ��� �� ����.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(1) ���� ��� �� : ��� ��� ������ 2� �</span><br><span class="line">(2) ���� ���� �� �� : � �� ������ 1� �</span><br><span class="line"></span><br><span class="line">(1)� ���� &#39;(��)+(��)-1&#39;</span><br><span class="line">(2)� ���� &#39;(��)+(��)-(��� ��� �����)</span><br></pre></td></tr></table></figure>
-<p>��� � � ���� �� ������ ��� ����� (��) + (��) - (�����)�� � � ��.</p>
-<p>�� ���� ��� ��� ��� ��� ���� Level1�� ��� �������� ���� ���. (Level1_C++_gcdlcm)</p>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">long long gcd(long long a, long long b)</span><br><span class="line">&#123;</span><br><span class="line">    long c;</span><br><span class="line">    while (b !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        c &#x3D; a % b;</span><br><span class="line">	a &#x3D; b;</span><br><span class="line">	b &#x3D; c;</span><br><span class="line">	&#125;</span><br><span class="line">	return a;</span><br><span class="line">&#125;</span><br><span class="line">long long solution(int w, int h) &#123;</span><br><span class="line">   long long W &#x3D; w;</span><br><span class="line">   long long H &#x3D; h;</span><br><span class="line">   return (W * H) - ((W + H) - gcd(W, H));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="문제풀이"><a href="#문제풀이" class="headerlink" title="문제풀이"></a>문제풀이</h2><p>처음에 문제를 봤을 때 바로 떠오른 생각이 최대공약수 개념이었다.<br>위에 있는 그림은 스크롤을 내리지 못해 미처 발견하지 못했고 혼자서 생각해보았다.</p>
+<p>5분 정도 혼자 고민을 한 끝에 최대공약수로는 판단할 수 없다고 생각을 했다.</p>
+<p>따라서, 구글링을 통해 [대각선이 지나는 점의 개수]를 찾는 방법을 찾았다.<br>[대각선이 지나는 점의 개수] : <a target="_blank" rel="noopener" href="https://m.blog.naver.com/orbis1020/220664563768">https://m.blog.naver.com/orbis1020/220664563768</a><br><br><br><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://mblogthumb-phinf.pstatic.net/20160324_159/orbis1020_1458747302465IxfMV_PNG/%B0%DD%C0%DA.png?type=w2" alt="example"></p>
+<p>초등학교 5학년의 수학문제라는 점에서 자괴감이 들었다. 나는. 4학년이니까 괜찮다! (..대학교)</p>
+<p>본론으로 다시 넘어와서 점의 개수는 위의 그림처럼 격자점의 유무에 따라 달라진다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(1) 격자점이 존재할 경우 : 가로와 세로의 최대공약수가 2일 때</span><br><span class="line">(2) 격자점이 존재하지 않을 경우 : 두 수의 최대공약수가 1일 때</span><br><span class="line"></span><br><span class="line">(1)의 경우에는 &#39;(가로)+(세로)-1&#39;</span><br><span class="line">(2)의 경우에는 &#39;(가로)+(세로)-(가로와 세로의 최대공약수)</span><br></pre></td></tr></table></figure>
+<p>하지만 둘 다 코드에선 같은 최대공약수를 빼므로 결론적으론 (가로) + (세로) - (최대공약수)임을 알 수 있다.</p>
+<p>최대 공약수를 구하는 방법은 다양한 방법이 있겠지만 Level1에서 배웠던 유클리드호제법을 사용하여 구했다. (Level1_C++_gcdlcm)</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">long long gcd(long long a, long long b)</span><br><span class="line">&#123;</span><br><span class="line">    long c;</span><br><span class="line"></span><br><span class="line">    while (b !&#x3D; 0)</span><br><span class="line">    &#123;</span><br><span class="line">        c &#x3D; a % b;</span><br><span class="line">        a &#x3D; b;</span><br><span class="line">        b &#x3D; c;</span><br><span class="line">    &#125;</span><br><span class="line">    return a;</span><br><span class="line">&#125;</span><br><span class="line">long long solution(int w, int h) &#123;</span><br><span class="line">    long long W &#x3D; w;</span><br><span class="line">    long long H &#x3D; h;</span><br><span class="line"></span><br><span class="line">    return (W * H) - ((W + H) - gcd(W, H));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
       </div>
       
         <div class="prev-or-next">
@@ -159,12 +164,12 @@
           </div>
           <div class="post-attach">
             <span class="post-pubtime">
-              <i class="iconfont icon-updatetime" title="Update time"></i>
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
               2021-01-10
             </span>
             
                   <span class="post-tags">
-                    <i class="iconfont icon-tags" title="Tags"></i>
+                    <i class="iconfont icon-tags" title="태그"></i>
                     
                     <span class="span--tag">
                       <a href="/tags/Algorithm/" title="Algorithm">
@@ -188,9 +193,9 @@
     </div>
     
   <div class="post-catalog" id="catalog">
-    <div class="title">Content</div>
+    <div class="title">목록</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD-%EF%BF%BD%EF%BF%BD%EF%BF%BD-Summer-Winter-Coding-2019"><span class="toc-text">��� ��� (Summer&#x2F;Winter Coding(2019))</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD"><span class="toc-text">����</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD-1"><span class="toc-text">����</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD-%EF%BF%BD"><span class="toc-text">��� �</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD-%EF%BF%BD-%EF%BF%BD%EF%BF%BD"><span class="toc-text">��� � ��</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BF%BD%EF%BF%BD%EF%BF%BD%EF%BF%BD-2"><span class="toc-text">����</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-text">Code</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%EB%A9%80%EC%A9%A1%ED%95%9C-%EC%82%AC%EA%B0%81%ED%98%95-Summer-Winter-Coding-2019"><span class="toc-text">멀쩡한 사각형 (Summer&#x2F;Winter Coding(2019))</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%EC%84%A4%EB%AA%85"><span class="toc-text">문제설명</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%9C%ED%95%9C%EC%82%AC%ED%95%AD"><span class="toc-text">제한사항</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9E%85%EC%B6%9C%EB%A0%A5-%EC%98%88"><span class="toc-text">입출력 예</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%9E%85%EC%B6%9C%EB%A0%A5-%EC%98%88-%EC%84%A4%EB%AA%85"><span class="toc-text">입출력 예 설명</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4"><span class="toc-text">문제풀이</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code"><span class="toc-text">Code</span></a></li></ol></li></ol>
     </div>
   </div>
 
@@ -277,7 +282,7 @@
           </a>
         </span>
         
-          <input type="text" class="search-input" id="search-input" placeholder="Search...">
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
         
         <span class="search-close-icon" id="search-close-icon">
           <a href="javascript: void(0)">
@@ -329,7 +334,7 @@
       'use strict';
       var $input = document.getElementById(search_id);
       var $resultContent = document.getElementById(content_id);
-      $resultContent.innerHTML = "<ul><span class='local-search-empty'>First search, index file loading, please wait...<span></ul>";
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
       $.ajax({
         // 0x01. load xml file
         url: path,
@@ -425,7 +430,7 @@
             });
             str += "</ul>";
             if (str.indexOf('<li>') === -1) {
-              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>No result<span></ul>";
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
             }
             $resultContent.innerHTML = str;
           });
