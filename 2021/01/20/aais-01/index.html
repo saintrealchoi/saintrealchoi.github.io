@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[AAIS]E01.Using Deep Learning Tools | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[AAIS]E01.Using Deep Learning Tools</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-01-20
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/AI/" title="AI">
+                    <b>#</b> AI
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/tensorflow/" title="tensorflow">
+                    <b>#</b> tensorflow
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/jupyter-notebook/" title="jupyter-notebook">
+                    <b>#</b> jupyter-notebook
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Using-Deep-Learning-Tools"><a href="#Using-Deep-Learning-Tools" class="headerlink" title="Using Deep Learning Tools"></a>Using Deep Learning Tools</h1><h2 id="들어가기에-앞서"><a href="#들어가기에-앞서" class="headerlink" title="들어가기에 앞서"></a>들어가기에 앞서</h2><p> 지난 시간에 CNN에 대해 간략하게 나마 알아보았다. <br><br>이번에는 교수님께서 제공해주신 예제들을 통해 친숙해져보도록 하겠다.</p>
+<p><code>!nvidia-smi</code>는 nvidia gpu resource들을 모니터링하는 명령어이다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!nvidia-smi</span><br></pre></td></tr></table></figure>
+<pre><code>Wed Jan 20 05:13:24 2021
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 410.104      Driver Version: 410.104      CUDA Version: 10.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  Tesla V100-DGXS...  On   | 00000000:07:00.0 Off |                    0 |
+| N/A   41C    P0    51W / 300W |   1561MiB / 32478MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla V100-DGXS...  On   | 00000000:08:00.0 Off |                    0 |
+| N/A   40C    P0    54W / 300W |    626MiB / 32478MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  Tesla V100-DGXS...  On   | 00000000:0E:00.0 Off |                    0 |
+| N/A   40C    P0    50W / 300W |  27829MiB / 32478MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+|   3  Tesla V100-DGXS...  On   | 00000000:0F:00.0 Off |                    0 |
+| N/A   40C    P0    49W / 300W |    652MiB / 32478MiB |      0%      Default |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
++-----------------------------------------------------------------------------+</code></pre>
+<p>랩실에서 실제로 사용하고 있는 서버이기 때문에 리소스를 확인하고 적절히 분배해서 사용해야한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># using gpu:/1</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br><span class="line">gpus = tf.config.experimental.list_physical_devices(<span class="string">&#x27;GPU&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> gpus:</span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    tf.config.experimental.set_memory_growth(gpus[<span class="number">0</span>], <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+<p>위와 같은 코드를 사용하면 GPU #1번을 사용하는 것이다. 또한, 한꺼번에 모든 메모리를 사용하는 것이 아닌 <code>tf.config.experimental.set_memory_growth</code>를 사용해 메모리를 증가시키며 사용한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># using gpu:/1</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br><span class="line">gpus = tf.config.experimental.list_physical_devices(<span class="string">&#x27;GPU&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> gpus:</span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    tf.config.experimental.set_memory_growth(gpus[<span class="number">0</span>], <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+<p><code>MNIST dataset</code>은 튜링어워드를 수상하셨던 <code>Convolution network</code>의 창시자 <code>Yann LeCun</code>가 제공해주시는 데이터셋이다.<br><br>이를 활용하여 실습을 진행해보겠다.</p>
+<p><code>MNIST dataset</code>은 손으로 쓴 숫자 이미지를 벡터로 나타낸 images와 그 이미지가 의미하는 숫자를 나타내는 labels로 이루어져 있다. 한개의 이미지는 <code>28*28(=784)의 픽셀</code>로 이루어져 있기 때문에 이는 784차원의 벡터로 저장되어 있고 진하기의 정도에 따라 0~1사이의 값이 들어있다. 예시는 다음과 같다.</p>
+<p align="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://docs.ncloud.com/ko/tensorflow/images/tensorflow-1-3-102.png"></p>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Conv2D, Flatten</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># the data, split between train and test sets</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line"></span><br><span class="line">print(<span class="string">&quot;# of train data : &quot;</span>,x_train.shape)</span><br><span class="line">print(<span class="string">&quot;# of test data : &quot;</span>,x_test.shape)</span><br></pre></td></tr></table></figure>
+<pre><code># of train data :  (60000, 28, 28)
+# of test data :  (10000, 28, 28)</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(x_train[<span class="number">509</span>], cmap=<span class="string">&#x27;gray&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f14e8b00940&gt;</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_8_1.png" alt="png"></p>
+<p>우선 CNN을 적용시키기 이전에 데이터를 vectorization시킨 후 진행해보겠다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Vectorization for ANN</span></span><br><span class="line">x_train_vectorize = x_train.reshape(<span class="number">60000</span>, <span class="number">784</span>)</span><br><span class="line">x_test_vectorize = x_test.reshape(<span class="number">10000</span>, <span class="number">784</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow.keras <span class="keyword">as</span> keras</span><br><span class="line">num_categories = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">y_train_onehot = keras.utils.to_categorical(y_train, num_categories)</span><br><span class="line">y_test_onehot = keras.utils.to_categorical(y_test, num_categories)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line">model.add(Dense(units=<span class="number">512</span>, activation=<span class="string">&#x27;relu&#x27;</span>, input_shape=(<span class="number">784</span>,)))</span><br><span class="line">model.add(Dense(units = <span class="number">512</span>, activation=<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(Dense(units = <span class="number">10</span>, activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line"></span><br><span class="line">model.summary()</span><br></pre></td></tr></table></figure>
+<pre><code>Model: &quot;sequential&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+dense (Dense)                (None, 512)               401920
+_________________________________________________________________
+dense_1 (Dense)              (None, 512)               262656
+_________________________________________________________________
+dense_2 (Dense)              (None, 10)                5130
+=================================================================
+Total params: 669,706
+Trainable params: 669,706
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">history = model.fit(x_train_vectorize, y_train_onehot,</span><br><span class="line">                    epochs=<span class="number">20</span>,</span><br><span class="line">                    verbose=<span class="number">1</span>,</span><br><span class="line">                    validation_data=(x_test_vectorize, y_test_onehot))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code>Epoch 1/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3957 - accuracy: 0.9521 - val_loss: 0.5461 - val_accuracy: 0.9337
+Epoch 2/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3798 - accuracy: 0.9524 - val_loss: 0.7209 - val_accuracy: 0.9506
+Epoch 3/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3913 - accuracy: 0.9522 - val_loss: 0.5986 - val_accuracy: 0.9464
+Epoch 4/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.3965 - accuracy: 0.9505 - val_loss: 0.6736 - val_accuracy: 0.9391
+Epoch 5/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4349 - accuracy: 0.9540 - val_loss: 0.7524 - val_accuracy: 0.9441
+Epoch 6/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4307 - accuracy: 0.9506 - val_loss: 0.9400 - val_accuracy: 0.9461
+Epoch 7/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4567 - accuracy: 0.9509 - val_loss: 0.8693 - val_accuracy: 0.9406
+Epoch 8/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4598 - accuracy: 0.9475 - val_loss: 0.9901 - val_accuracy: 0.9225
+Epoch 9/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4730 - accuracy: 0.9471 - val_loss: 1.5888 - val_accuracy: 0.9191
+Epoch 10/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.4903 - accuracy: 0.9363 - val_loss: 0.9527 - val_accuracy: 0.9295
+Epoch 11/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5425 - accuracy: 0.9351 - val_loss: 1.4321 - val_accuracy: 0.9451
+Epoch 12/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5320 - accuracy: 0.9397 - val_loss: 1.7940 - val_accuracy: 0.9428
+Epoch 13/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5362 - accuracy: 0.9346 - val_loss: 1.5604 - val_accuracy: 0.8951
+Epoch 14/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5934 - accuracy: 0.9328 - val_loss: 1.8964 - val_accuracy: 0.8971
+Epoch 15/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5844 - accuracy: 0.9265 - val_loss: 1.7190 - val_accuracy: 0.9085
+Epoch 16/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.6048 - accuracy: 0.9211 - val_loss: 1.6869 - val_accuracy: 0.9072
+Epoch 17/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.5789 - accuracy: 0.9172 - val_loss: 2.8615 - val_accuracy: 0.8887
+Epoch 18/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.6705 - accuracy: 0.9189 - val_loss: 2.0492 - val_accuracy: 0.9045
+Epoch 19/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.6655 - accuracy: 0.9216 - val_loss: 1.9504 - val_accuracy: 0.9053
+Epoch 20/20
+1875/1875 [==============================] - 6s 3ms/step - loss: 0.6559 - accuracy: 0.9233 - val_loss: 2.6255 - val_accuracy: 0.9164</code></pre>
+<h1 id="Keras-Sequential-model"><a href="#Keras-Sequential-model" class="headerlink" title="Keras Sequential model"></a>Keras Sequential model</h1><h2 id="Specify-Input-Shape"><a href="#Specify-Input-Shape" class="headerlink" title="Specify Input Shape"></a>Specify Input Shape</h2><hr>
+<p>Model should know the Input Shape. So, <code>Sequential</code>model’s first layer(after this, layer know the shape) shold give the information.</p>
+<ul>
+<li>Pass the <code>input_shape</code> to the first layer. This is a tuple containing shape information.(A tuple with an integer or <code>None</code> as an entry; <code>None</code> represents an arbitrary positive integer). The <code>input_shape</code> does not include batch dimension.</li>
+<li>Some two-dimensional layers, such as <code>Dense</code>, can specify the input shape through the <code>input_dim</code> argument, and some three-dimensional layers(temporal) support the <code>input_dim</code> and <code>input_length</code> arguments.</li>
+</ul>
+<h2 id="Compile"><a href="#Compile" class="headerlink" title="Compile"></a>Compile</h2><hr>
+<p>Before Learning, you must configure the learning process with the <code>compile</code> method. This Method accepts three arguments.</p>
+<ol>
+<li>optimizer : It can be a string identifier that represents a built-in optimizer (such as <code>rmsprop</code> or <code>adagrad</code>), or an instance of the <code>optimizer</code> class.</li>
+<li>loss : Loss function. This is what the model wants to minimize. It can be the string identifier(<code>categorical_crossentropy</code> or <code>mse</code>, and so on) or an instance of the target function itself of the built-in loss function</li>
+<li>metrics : List of Metrics. If you solve the classification problem, It is recommended to use <code>metrics = [&#39;accuracy&#39;]</code>. Metrics can be string identifiers for built-in metrics or user-defined metric functions.</li>
+</ol>
+<h2 id="Train"><a href="#Train" class="headerlink" title="Train"></a>Train</h2><hr>
+<p>The Keras model is trained based on input data and labels from the Numpy array. When you train a model, you typically use the <code>fit</code> function.</p>
+<h3 id="For-the-better-explanation"><a href="#For-the-better-explanation" class="headerlink" title="For the better explanation"></a><a target="_blank" rel="noopener" href="https://www.codeonweb.com/entry/eda18bec-7c7d-426f-ab98-90e18db6fdba">For the better explanation</a></h3><h1 id="Layer"><a href="#Layer" class="headerlink" title="Layer"></a>Layer</h1><h2 id="Activation-Function"><a href="#Activation-Function" class="headerlink" title="Activation Function"></a>Activation Function</h2><hr>
+<h3 id="1-ReLU-Rectified-Linear-Unit-activation-function"><a href="#1-ReLU-Rectified-Linear-Unit-activation-function" class="headerlink" title="1. ReLU(Rectified Linear Unit activation function)"></a>1. ReLU(Rectified Linear Unit activation function)</h3><p align ="center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://mlnotebook.github.io/img/transferFunctions/relu.png"></p>
+
+<ul>
+<li><strong>Features</strong></li>
+</ul>
+<ol>
+<li>It makes the vanishing gradient problem(tanh, sigmoid have) <strong>MUCH WORSE</strong>,since for all negative values the derivative is precisely zero.</li>
+<li>Computational Cost is not significant.</li>
+<li>In comparison to (sigmoid,tanh), convergence speed is much better.</li>
+</ol>
+<h3 id="2-softmax"><a href="#2-softmax" class="headerlink" title="2. softmax"></a>2. softmax</h3><ul>
+<li><strong>Features</strong></li>
+</ul>
+<ol>
+<li>A function that normalizes the output value of a neuron at the last stage for class classification.(normalize sigmoid function)</li>
+<li>So, we can think that It converts the output into probability. (sum = 1.0)</li>
+</ol>
+<h2 id="결과에-대한-분석"><a href="#결과에-대한-분석" class="headerlink" title="결과에 대한 분석"></a>결과에 대한 분석</h2><p>우선 케라스의 <code>Sequential Model</code>, <code>compile</code>, <code>fit</code>과 <code>activation function</code>에 대해 간략히 적어보았다. 이전에 있어보이려고 영어로 적어봤는데 아까워서 그냥 붙여썼다.</p>
+<p>결과에 대해 다뤄보자면, <code>epoch= 20</code>으로 수행한 결과 어느정도까지는 accuracy는 높아지고 loss는 낮아지는 좋은 현상이 일어났지만 그 이후로는 줄어들었다 늘어났다를 반복하여 결론적으로는 성능이 더 낮아졌다. 그 이유는 무엇일까?</p>
+<p>정답은 이미지를 벡터로 표현했기 때문이다. 저번 시간에도 말했듯 이미지를 벡터화한다면 조금만 translation되어도 다른 이미지로 인식하므로 overfitting되는 결과가 나온다. 따라서 이를 방지하고자 CNN을 사용하는 것이다.</p>
+<p>Convolution을 한 모델로 새롭게 해보자.</p>
+<h2 id="New-Model-with-Convolution"><a href="#New-Model-with-Convolution" class="headerlink" title="New Model with Convolution"></a>New Model with Convolution</h2><p><strong>새로 들어가기에 앞서 이 서버는 다른분들도 사용하셔서 항상 리소스를 반환해줘야한다.<br>따라서 학습이 끝난 후 리소스를 반환해주자.</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> IPython</span><br><span class="line">app = IPython.Application.instance()</span><br><span class="line">app.kernel.do_shutdown(<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&#123;&#39;status&#39;: &#39;ok&#39;, &#39;restart&#39;: True&#125;</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># using gpu:/1</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br><span class="line">gpus = tf.config.experimental.list_physical_devices(<span class="string">&#x27;GPU&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> gpus:</span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    tf.config.experimental.set_memory_growth(gpus[<span class="number">0</span>], <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">    print(e)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># using gpu:/1</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;1&quot;</span></span><br><span class="line"></span><br><span class="line">gpus = tf.config.experimental.list_physical_devices(<span class="string">&#x27;GPU&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> gpus:</span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    tf.config.experimental.set_memory_growth(gpus[<span class="number">0</span>], <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> tensorflow.keras.datasets <span class="keyword">import</span> mnist</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> Dense, Conv2D, Flatten</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># the data, split between train and test sets</span></span><br><span class="line">(x_train, y_train), (x_test, y_test) = mnist.load_data()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow.keras <span class="keyword">as</span> keras</span><br><span class="line">num_categories = <span class="number">10</span></span><br><span class="line"></span><br><span class="line">y_train_onehot = keras.utils.to_categorical(y_train, num_categories)</span><br><span class="line">y_test_onehot = keras.utils.to_categorical(y_test, num_categories)</span><br></pre></td></tr></table></figure>
+<p>여기까지의 내용은 동일하다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">model = Sequential()</span><br><span class="line"></span><br><span class="line">model.add(Conv2D(<span class="number">64</span>, kernel_size=<span class="number">3</span>, activation=<span class="string">&#x27;relu&#x27;</span>, input_shape=(<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>)))</span><br><span class="line">model.add(Conv2D(<span class="number">32</span>, kernel_size=<span class="number">3</span>, activation=<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(Flatten())</span><br><span class="line">model.add(Dense(<span class="number">10</span>, activation=<span class="string">&#x27;softmax&#x27;</span>))</span><br><span class="line">model.summary()</span><br><span class="line"></span><br><span class="line">model.<span class="built_in">compile</span>(loss=<span class="string">&#x27;categorical_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line"></span><br><span class="line">x_train_forConv = x_train.reshape(<span class="number">60000</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>)</span><br><span class="line">x_test_forConv = x_test.reshape(<span class="number">10000</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">history = model.fit(x_train_forConv, y_train_onehot,</span><br><span class="line">                    epochs=<span class="number">20</span>,</span><br><span class="line">                    verbose=<span class="number">1</span>,</span><br><span class="line">                    validation_data=(x_test_forConv, y_test_onehot))</span><br></pre></td></tr></table></figure>
+<pre><code>Model: &quot;sequential_1&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+conv2d_2 (Conv2D)            (None, 26, 26, 64)        640
+_________________________________________________________________
+conv2d_3 (Conv2D)            (None, 24, 24, 32)        18464
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 18432)             0
+_________________________________________________________________
+dense_1 (Dense)              (None, 10)                184330
+=================================================================
+Total params: 203,434
+Trainable params: 203,434
+Non-trainable params: 0
+_________________________________________________________________
+Epoch 1/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.1776 - accuracy: 0.9570 - val_loss: 0.1147 - val_accuracy: 0.9729
+Epoch 2/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0854 - accuracy: 0.9766 - val_loss: 0.0864 - val_accuracy: 0.9778
+Epoch 3/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0745 - accuracy: 0.9797 - val_loss: 0.0905 - val_accuracy: 0.9735
+Epoch 4/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0724 - accuracy: 0.9802 - val_loss: 0.0919 - val_accuracy: 0.9781
+Epoch 5/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0700 - accuracy: 0.9812 - val_loss: 0.0837 - val_accuracy: 0.9746
+Epoch 6/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0690 - accuracy: 0.9818 - val_loss: 0.1036 - val_accuracy: 0.9742
+Epoch 7/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0690 - accuracy: 0.9818 - val_loss: 0.1009 - val_accuracy: 0.9750
+Epoch 8/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0689 - accuracy: 0.9819 - val_loss: 0.1134 - val_accuracy: 0.9746
+Epoch 9/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0700 - accuracy: 0.9819 - val_loss: 0.1004 - val_accuracy: 0.9760
+Epoch 10/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0692 - accuracy: 0.9826 - val_loss: 0.1298 - val_accuracy: 0.9750
+Epoch 11/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0681 - accuracy: 0.9827 - val_loss: 0.1055 - val_accuracy: 0.9732
+Epoch 12/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0688 - accuracy: 0.9820 - val_loss: 0.1205 - val_accuracy: 0.9725
+Epoch 13/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0682 - accuracy: 0.9830 - val_loss: 0.1140 - val_accuracy: 0.9751
+Epoch 14/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0671 - accuracy: 0.9830 - val_loss: 0.1266 - val_accuracy: 0.9729
+Epoch 15/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0664 - accuracy: 0.9831 - val_loss: 0.1417 - val_accuracy: 0.9723
+Epoch 16/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0639 - accuracy: 0.9837 - val_loss: 0.1319 - val_accuracy: 0.9729
+Epoch 17/20
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0670 - accuracy: 0.9837 - val_loss: 0.1290 - val_accuracy: 0.9723
+Epoch 18/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0668 - accuracy: 0.9840 - val_loss: 0.1517 - val_accuracy: 0.9736
+Epoch 19/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0625 - accuracy: 0.9849 - val_loss: 0.1545 - val_accuracy: 0.9699
+Epoch 20/20
+1875/1875 [==============================] - 7s 4ms/step - loss: 0.0640 - accuracy: 0.9845 - val_loss: 0.1448 - val_accuracy: 0.9691</code></pre>
+<p>epoch를 20으로 했더니 train data들은 대부분 loss도 감소하고 accuracy도 증가하지만 <br><br>test data들은 loss도 들쭉날쭉에 accuracy는 감소하기까지한다.<br><br>아직 <code>overfitting</code>의 문제를 해결하지 못했을 뿐만아니라 <code>vanishing/exploding gradient</code>또한 해결하지 못했다. <br><br>이는 다음 실습에서 <code>batchnormalization</code>과 <code>dropdout</code>에 대해 공부해보고 좀 더 지켜보도록 하겠다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">n = <span class="number">90</span></span><br><span class="line">plt.imshow(x_test[n].reshape(<span class="number">28</span>, <span class="number">28</span>), cmap=<span class="string">&#x27;Greys&#x27;</span>, interpolation=<span class="string">&#x27;nearest&#x27;</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">print(<span class="string">&#x27;정답은 : &#x27;</span>, np.argmax(model.predict(x_test[n].reshape((<span class="number">1</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>)))))</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_25_0.png" alt="png"></p>
+<center>정답은 :  3</center>
+
+
+<p>랜덤하게 추출해서 확인해보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">use_samples = np.random.randint(<span class="number">5000</span>,size = <span class="number">16</span>)</span><br><span class="line">samples_to_predict = []</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line">nrows = ncols = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">plt.figure(figsize = (<span class="number">12</span>,<span class="number">8</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> sample <span class="keyword">in</span> use_samples:</span><br><span class="line">  count+=<span class="number">1</span></span><br><span class="line">  plt.subplot(nrows,ncols,count)</span><br><span class="line">  reshaped_image = x_test[sample].reshape((<span class="number">28</span>, <span class="number">28</span>))</span><br><span class="line">  plt.imshow(reshaped_image,cmap=<span class="string">&#x27;Greys&#x27;</span>, interpolation=<span class="string">&#x27;nearest&#x27;</span>)</span><br><span class="line">  samples_to_predict.append(x_test[sample])</span><br><span class="line">  tmp = <span class="string">&quot;Label:&quot;</span> + <span class="built_in">str</span>(y_test[sample]) + <span class="string">&quot;, Prediction:&quot;</span> + <span class="built_in">str</span>(np.argmax(model.predict(x_test[sample].reshape((<span class="number">1</span>,<span class="number">28</span>,<span class="number">28</span>,<span class="number">1</span>)))))</span><br><span class="line">  plt.title(tmp)</span><br><span class="line"></span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_27_0.png" alt="png"></p>
+<p>약간의 오차가 있는 듯하다. 이는 다른 <code>Layer</code>들을 공부하면서 줄여보도록 하겠다.</p>
+<p>그리고 리소스반환도 필수다!</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> IPython</span><br><span class="line">app = IPython.Application.instance()</span><br><span class="line">app.kernel.do_shutdown(<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&#123;&#39;status&#39;: &#39;ok&#39;, &#39;restart&#39;: True&#125;</code></pre>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/20/algorithm-02/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-01-20
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AI/" title="AI">
+                        <b>#</b> AI
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/tensorflow/" title="tensorflow">
+                        <b>#</b> tensorflow
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/jupyter-notebook/" title="jupyter-notebook">
+                        <b>#</b> jupyter-notebook
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-Deep-Learning-Tools"><span class="toc-text">Using Deep Learning Tools</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%93%A4%EC%96%B4%EA%B0%80%EA%B8%B0%EC%97%90-%EC%95%9E%EC%84%9C"><span class="toc-text">들어가기에 앞서</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Keras-Sequential-model"><span class="toc-text">Keras Sequential model</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Specify-Input-Shape"><span class="toc-text">Specify Input Shape</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Compile"><span class="toc-text">Compile</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Train"><span class="toc-text">Train</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#For-the-better-explanation"><span class="toc-text">For the better explanation</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Layer"><span class="toc-text">Layer</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Activation-Function"><span class="toc-text">Activation Function</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ReLU-Rectified-Linear-Unit-activation-function"><span class="toc-text">1. ReLU(Rectified Linear Unit activation function)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-softmax"><span class="toc-text">2. softmax</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EA%B2%B0%EA%B3%BC%EC%97%90-%EB%8C%80%ED%95%9C-%EB%B6%84%EC%84%9D"><span class="toc-text">결과에 대한 분석</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#New-Model-with-Convolution"><span class="toc-text">New Model with Convolution</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
