@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[Algorithm] 오픈채팅방 | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[Algorithm] 오픈채팅방</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-01-20
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Algorithm/" title="Algorithm">
+                    <b>#</b> Algorithm
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Algorithm/" title="Algorithm">
+                    <b>#</b> Algorithm
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Programmers/" title="Programmers">
+                    <b>#</b> Programmers
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="오픈채팅방-2019-KAKAO-BLIND-RECRUITMENT"><a href="#오픈채팅방-2019-KAKAO-BLIND-RECRUITMENT" class="headerlink" title="오픈채팅방 (2019 KAKAO BLIND RECRUITMENT)"></a>오픈채팅방 (2019 KAKAO BLIND RECRUITMENT)</h1><hr>
+<h2 id="문제설명"><a href="#문제설명" class="headerlink" title="문제설명"></a>문제설명</h2><p>카카오톡 오픈채팅방에서는 친구가 아닌 사람들과 대화를 할 수 있는데, 본래 닉네임이 아닌 가상의 닉네임을 사용하여 채팅방에 들어갈 수 있다.</p>
+<p>신입사원인 김크루는 카카오톡 오픈 채팅방을 개설한 사람을 위해, 다양한 사람들이 들어오고, 나가는 것을 지켜볼 수 있는 관리자창을 만들기로 했다. 채팅방에 누군가 들어오면 다음 메시지가 출력된다.</p>
+<p>[닉네임]님이 들어왔습니다.</p>
+<p>채팅방에서 누군가 나가면 다음 메시지가 출력된다.</p>
+<p>[닉네임]님이 나갔습니다.</p>
+<p>채팅방에서 닉네임을 변경하는 방법은 다음과 같이 두 가지이다.</p>
+<p>채팅방을 나간 후, 새로운 닉네임으로 다시 들어간다.<br>채팅방에서 닉네임을 변경한다.<br>닉네임을 변경할 때는 기존에 채팅방에 출력되어 있던 메시지의 닉네임도 전부 변경된다.</p>
+<p>예를 들어, 채팅방에 Muzi와 Prodo라는 닉네임을 사용하는 사람이 순서대로 들어오면 채팅방에는 다음과 같이 메시지가 출력된다.</p>
+<p>Muzi님이 들어왔습니다.<br>Prodo님이 들어왔습니다.</p>
+<p>채팅방에 있던 사람이 나가면 채팅방에는 다음과 같이 메시지가 남는다.</p>
+<p>Muzi님이 들어왔습니다.<br>Prodo님이 들어왔습니다.<br>Muzi님이 나갔습니다.</p>
+<p>Muzi가 나간후 다시 들어올 때, Prodo 라는 닉네임으로 들어올 경우 기존에 채팅방에 남아있던 Muzi도 Prodo로 다음과 같이 변경된다.</p>
+<p>Prodo님이 들어왔습니다.<br>Prodo님이 들어왔습니다.<br>Prodo님이 나갔습니다.<br>Prodo님이 들어왔습니다.</p>
+<p>채팅방은 중복 닉네임을 허용하기 때문에, 현재 채팅방에는 Prodo라는 닉네임을 사용하는 사람이 두 명이 있다. 이제, 채팅방에 두 번째로 들어왔던 Prodo가 Ryan으로 닉네임을 변경하면 채팅방 메시지는 다음과 같이 변경된다.</p>
+<p>Prodo님이 들어왔습니다.<br>Ryan님이 들어왔습니다.<br>Prodo님이 나갔습니다.<br>Prodo님이 들어왔습니다.</p>
+<p>채팅방에 들어오고 나가거나, 닉네임을 변경한 기록이 담긴 문자열 배열 record가 매개변수로 주어질 때, 모든 기록이 처리된 후, 최종적으로 방을 개설한 사람이 보게 되는 메시지를 문자열 배열 형태로 return 하도록 solution 함수를 완성하라.</p>
+<h2 id="제한사항"><a href="#제한사항" class="headerlink" title="제한사항"></a>제한사항</h2><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">record는 다음과 같은 문자열이 담긴 배열이며, 길이는 1 이상 100,000 이하이다.</span><br><span class="line">다음은 record에 담긴 문자열에 대한 설명이다.</span><br><span class="line"> - 모든 유저는 [유저 아이디]로 구분한다.</span><br><span class="line"> - [유저 아이디] 사용자가 [닉네임]으로 채팅방에 입장 - Enter [유저 아이디] [닉네임] (ex. Enter uid1234 Muzi)</span><br><span class="line"> - [유저 아이디] 사용자가 채팅방에서 퇴장 - Leave [유저 아이디] (ex. Leave uid1234)</span><br><span class="line"> - [유저 아이디] 사용자가 닉네임을 [닉네임]으로 변경 - Change [유저 아이디] [닉네임] (ex. Change uid1234 Muzi)</span><br><span class="line"> - 첫 단어는 Enter, Leave, Change 중 하나이다.</span><br><span class="line"> - 각 단어는 공백으로 구분되어 있으며, 알파벳 대문자, 소문자, 숫자로만 이루어져있다.</span><br><span class="line"> - 유저 아이디와 닉네임은 알파벳 대문자, 소문자를 구별한다.</span><br><span class="line"> - 유저 아이디와 닉네임의 길이는 1 이상 10 이하이다.</span><br><span class="line"> - 채팅방에서 나간 유저가 닉네임을 변경하는 등 잘못 된 입력은 주어지지 않는다.</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th align="left"><center>record</center></th>
+<th align="center"><center>result</center></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">[“Enter uid1234 Muzi”, “Enter uid4567 Prodo”,”Leave uid1234”,”Enter uid1234 Prodo”,”Change uid4567 Ryan”]</td>
+<td align="center"><center>[“Prodo님이 들어왔습니다.”, “Ryan님이 들어왔습니다.”, “Prodo님이 나갔습니다.”, “Prodo님이 들어왔습니다.”] </center></td>
+</tr>
+</tbody></table>
+<h2 id="문제풀이"><a href="#문제풀이" class="headerlink" title="문제풀이"></a>문제풀이</h2><hr>
+<p>문제풀이가 굉장히 간단해보였다. 나는 하드코딩을 하였지만 그래도 쉽게 풀릴 것이라 생각했다.<br>제한사항을 읽어봤더니 Enter, Change, Leave로 분기만 하면될 것이라 생각했다.</p>
+<ol>
+<li>Enter<ul>
+<li>userId를 검색하여 이미 존재하는 id라면 모든 이름을 바꾼 후 추가</li>
+<li>존재하지 않는다면 추가</li>
+</ul>
+</li>
+<li>Change<ul>
+<li>userId를 검색하여 이름을 모두 바꿈</li>
+</ul>
+</li>
+<li>Leave<ul>
+<li>userId를 검색하여 추가</li>
+</ul>
+</li>
+</ol>
+<p>우선 Leave는 id만 존재하고 닉네임이 존재하지 않아 벡터에 추가하였다.<br>그리고 맨마지막엔 translation을 하는 과정을 추가하였다.<br>따라서 다음과 같이 풀이하였다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">bool find(string s, string name ,vector&lt;vector&lt;string&gt;&gt; &amp;before) &#123;</span><br><span class="line">    bool answer &#x3D; false;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; before.size(); i++) &#123;</span><br><span class="line">        if (before[i][1] &#x3D;&#x3D; s) &#123;</span><br><span class="line">            answer &#x3D; true;</span><br><span class="line">            before[i][2] &#x3D; name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return answer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">string append(string s, vector&lt;vector&lt;string&gt;&gt;&amp; before) &#123;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; before.size(); i++) &#123;</span><br><span class="line">        if (before[i][1] &#x3D;&#x3D; s)</span><br><span class="line">            return before[i][1];</span><br><span class="line">    &#125;</span><br><span class="line">    return &quot;잘못된 입력&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void change(string s, string name,vector&lt;vector&lt;string&gt;&gt;&amp; before) &#123;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; before.size(); i++) &#123;</span><br><span class="line">        if (before[i][1] &#x3D;&#x3D; s)</span><br><span class="line">            before[i][2] &#x3D; name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vector&lt;string&gt; solution(vector&lt;string&gt; record) &#123;</span><br><span class="line">    vector&lt;string&gt; answer;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; word;</span><br><span class="line">    vector&lt;vector&lt;string&gt;&gt; before;</span><br><span class="line"></span><br><span class="line">    for (int i &#x3D; 0; i &lt; record.size(); i++) &#123;</span><br><span class="line">        vector&lt;string&gt; s;</span><br><span class="line">        int count &#x3D; 0;</span><br><span class="line">        for (int j &#x3D; 0; j &lt; record[i].size()+1; j++) &#123;</span><br><span class="line">            if (record[i][j] &#x3D;&#x3D; &#39; &#39; || j&#x3D;&#x3D;record[i].size()) &#123;</span><br><span class="line">                s.emplace_back(record[i].substr(count, j-count));</span><br><span class="line">                count &#x3D; j + 1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        word.emplace_back(s);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for (int i &#x3D; 0; i &lt; word.size(); i++) &#123;</span><br><span class="line">        if (word[i][0] &#x3D;&#x3D; &quot;Enter&quot;) &#123;</span><br><span class="line">            if (find(word[i][1],word[i][2], before)) &#123;</span><br><span class="line">                before.emplace_back(word[i]);</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            else</span><br><span class="line">                before.emplace_back(word[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        else if (word[i][0] &#x3D;&#x3D; &quot;Leave&quot;) &#123;</span><br><span class="line">            word[i].emplace_back(append(word[i][1], before));</span><br><span class="line">            before.emplace_back(word[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        else &#123;</span><br><span class="line">            change(word[i][1],word[i][2], before);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i &#x3D; 0; i &lt; before.size(); i++) &#123;</span><br><span class="line">        string s;</span><br><span class="line">        s.append(before[i][2]);</span><br><span class="line">        s.append(&quot;님이 &quot;);</span><br><span class="line">        if (before[i][0] &#x3D;&#x3D; &quot;Enter&quot;) s.append(&quot;들어왔습니다.&quot;);</span><br><span class="line">        else s.append(&quot;나갔습니다.&quot;);</span><br><span class="line">        answer.emplace_back(s);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return answer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>일단 결과가 매우 안좋았다. 실패하는 경우도 있었을 뿐만 아니라 시간초과도 떴기 때문이다.</p>
+<p>모를 땐 빨리 구글링이 답이다.</p>
+<h3 id="BEST"><a href="#BEST" class="headerlink" title="BEST "></a><center><a target="_blank" rel="noopener" href="https://life-with-coding.tistory.com/395">BEST</a> </center></h3><p>내가 처음보는 STL이 있었다.</p>
+<hr>
+<h3 id="StringStream"><a href="#StringStream" class="headerlink" title="StringStream"></a>StringStream</h3><p>해당 자료형에 맞는 필요한 정보를 추출하는 stream 클래스이다.<br><sstream>헤더파일이 필요하다.</p>
+<p>stringstream 연산자/함수</p>
+<ul>
+<li>“&gt;&gt;” : 데이터를 추출하는 연산자</li>
+<li>“&lt;&lt;” : 데이터를 삽입하는 연산자</li>
+<li>“obj.str(target)” : obj의 string을 변환하여 target에 저장</li>
+</ul>
+<hr>
+<h3 id="해결코드"><a href="#해결코드" class="headerlink" title="해결코드"></a>해결코드</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;string&gt;</span><br><span class="line">#include &lt;sstream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;map&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">map&lt;string, string&gt; m;</span><br><span class="line"></span><br><span class="line">vector&lt;string&gt; solution(vector&lt;string&gt; record)</span><br><span class="line">&#123;</span><br><span class="line">    vector&lt;string&gt; answer;</span><br><span class="line">    string id, name, state;</span><br><span class="line">    stringstream ss;</span><br><span class="line"></span><br><span class="line">    for(int i&#x3D;0;i&lt;record.size();i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ss.str(record[i]);</span><br><span class="line">        ss &gt;&gt; state; ss &gt;&gt; id; ss &gt;&gt; name;</span><br><span class="line">        if(state &#x3D;&#x3D; &quot;Enter&quot; || state &#x3D;&#x3D; &quot;Change&quot;)&#123;</span><br><span class="line">            m[id] &#x3D; name;</span><br><span class="line">        &#125;</span><br><span class="line">        ss.clear();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    for(int i&#x3D;0;i&lt;record.size();i++)</span><br><span class="line">    &#123;</span><br><span class="line">        ss.str(record[i]);</span><br><span class="line">        ss &gt;&gt; state; ss &gt;&gt; id;</span><br><span class="line">        name &#x3D; m[id];</span><br><span class="line">        if(state &#x3D;&#x3D; &quot;Enter&quot;) &#123;</span><br><span class="line">            answer.push_back(name + &quot;님이 들어왔습니다.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        if(state &#x3D;&#x3D; &quot;Leave&quot;)&#123;</span><br><span class="line">            answer.push_back(name + &quot;님이 나갔습니다.&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        ss.clear();</span><br><span class="line">    &#125;</span><br><span class="line">    return answer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>새로운 STL을 발견하여 기분은 좋았다. 빨리 코딩하려다보니 해시도 까먹고 후다닥 처리하다보니 저런 망작이 나왔다.<br>위의 코드를 참고하여 다른 문제들에 적용시켜보도록 해야겠다.</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/20/java-day2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-01-20
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/Algorithm/" title="Algorithm">
+                        <b>#</b> Algorithm
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Algorithm/" title="Algorithm">
+                        <b>#</b> Algorithm
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Programmers/" title="Programmers">
+                        <b>#</b> Programmers
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%EC%98%A4%ED%94%88%EC%B1%84%ED%8C%85%EB%B0%A9-2019-KAKAO-BLIND-RECRUITMENT"><span class="toc-text">오픈채팅방 (2019 KAKAO BLIND RECRUITMENT)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%EC%84%A4%EB%AA%85"><span class="toc-text">문제설명</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%A0%9C%ED%95%9C%EC%82%AC%ED%95%AD"><span class="toc-text">제한사항</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%AC%B8%EC%A0%9C%ED%92%80%EC%9D%B4"><span class="toc-text">문제풀이</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#BEST"><span class="toc-text">BEST </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#StringStream"><span class="toc-text">StringStream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%ED%95%B4%EA%B2%B0%EC%BD%94%EB%93%9C"><span class="toc-text">해결코드</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
