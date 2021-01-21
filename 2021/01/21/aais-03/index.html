@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[AAIS] E03. Convolution Layer - 2 | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[AAIS] E03. Convolution Layer - 2</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-01-21
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/AI/" title="AI">
+                    <b>#</b> AI
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/tensorflow/" title="tensorflow">
+                    <b>#</b> tensorflow
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/keras/" title="keras">
+                    <b>#</b> keras
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Agian-CNN"><a href="#Agian-CNN" class="headerlink" title="Agian CNN"></a>Agian CNN</h1><h2 id="Review-the-reports"><a href="#Review-the-reports" class="headerlink" title="Review the reports"></a>Review the reports</h2><h3 id="Tooth-wise-age-group-prediction-with-CNN-model"><a href="#Tooth-wise-age-group-prediction-with-CNN-model" class="headerlink" title="Tooth-wise age-group prediction with CNN model"></a>Tooth-wise age-group prediction with CNN model</h3><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Tooth‑wise age‑group prediction with CNN model. As the frst molar is considered to be the most reliable tooth for estimating dental age15,22, we selected it for developing a CNN model for the age-group determination. From a panoramic radiograph of each patient, image patches of teeth #16, #26, #36, and #46 were manually extracted. Te goal of extracting image patches from the panoramic radiographs was to include complete contours of the teeth. As a result, a total of 4,312 image patches of frst molars were collected from 1078 patients for training, and every tooth patch was resized into a fxed size of 151×112. To minimize any unnecessary variance in the dataset and to improve the performance of the model, the dataset was augmented23, and we used the following selective data augmentation techniques: the tooth images were fipped lef and right, upside down, rotated, and reversed by 90°.</span><br><span class="line">Te residual deep neural network with 152 layers (ResNet-152)23 was trained to predict the age-group toothwise, that is, for each tooth. Te weights of the network were initialized using pre-trained weights from ImageNet dataset24. Ten, the entire network was fne-tuned for the target age-group estimation problem. Although the ImageNet base dataset does not include teeth images, various studies have shown that the fne-tuning of a pretrained network with several images of ImageNet helps improve the performance in disease-related problem learning using medical images25–27. Te network was trained using the cross-entropy loss function and adaptive moment estimation (Adam) optimizer28 with a learning rate of 1e-5 and a batch size of 32. We trained the network for 40,000 iterations and validated it using validation data every 1000 iterations with a classifcation accuracy metric to determine whether to stop the training. Te network showing the highest validation accuracy was selected as the fnal model and used for testing.</span><br></pre></td></tr></table></figure>
+
+<p>첫번째 큰어금니가 치아 나이를 추론<sup><a href="#footnote_1">1</a></sup><sup><a href="#footnote_2">2</a></sup>하는데 가장 좋으므로, 이를 채택하여 CNN 모델을 생성하였다.<br>각각의 환자의 파노라마사진으로부터 #16, #26, #36, #46번 치아를 추출하였다.</p>
+<p align = "center"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="http://postfiles9.naver.net/MjAxNzAzMTBfMTUx/MDAxNDg5MTE2MTY3MDE5.FJwhRPEDicEibFZ9haFXwlkpCUW8IDQkHMGBAKQyK_4g.hWk8acgCVJA2b125bulyofsgNMgk52gU5QDJ73MML2gg.JPEG.onedaydent/image_2923048291489116088889.jpg?type=w966" width = "500px"></p>
+
+<p>파노라마 이미지로부터 image patch를 추출하는 목표는 완전한 이의 윤곽(contour)를 포함시키는 것이다. 결론적으로, 1078명의 이미지로부터 4,312개의 image patch들을 모았고 모든 image patch는 151 X 112로 사이즈를 리사이징(resize)하였다. 불필요한 데이터셋들을 줄이고 모델의 성능(performance)를 증가시키기위해 데이터셋이 추가<sup><a href="#footnote_3">3</a></sup>되었다.</p>
+<p>ResNet-152<sup><a href="#footnote_3">3</a></sup>(The Residual deep neural network with 152 layers)는 각각의 치아의 age-group을 추정했다. 가중치(The weights of the network)는 ImageNet datet으로부터 이미 훈련된것들로부터 시작되었다. 그 후, 전체 네트워크는 age-group을 추정하기위한 모델로 변형(fine-tuned)되었다. 비록, ImageNetbase dataset은 이(teeth)의 이미지를 포함하지 않지만, 다수의 연구들이 의학이미지(medical image)들을 사용하여 질병에관련된 문제들을 푸는데 성능을 증가시켰다는 것을 보여줬다. ResNet은 <code>cross-entopy loss function</code>과 <code>adaptive moment estimation(Adam) optimizer</code>를 통해 학습되었다. <code>learning rate</code>은 1e-5이며 <code>batch size</code>는 32이다. 또한, 4만번의 반복학습을 하였고 1000회마다 분류(classification)정확도를 측정하였다. 가장 높은 validation accuracy를 보여준 네트워크를 최종모델로 선정하였다.</p>
+<h2 id="ResNet-152"><a href="#ResNet-152" class="headerlink" title="ResNet-152?"></a>ResNet-152?</h2><p>위의 내용에 따르면 ResNet-152라는 것이 나온다. CNN이랑 다른건가?싶어 걱정이 앞섰지만 다행히도 CNN의 한 종류이다.<br><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1512.03385.pdf">Deep Residual Learning for Image Recognition</a>에 따르면 <code>residual learning</code>을 통해 기존의 심층신경망보다 상당히 깊은 신경망에 대해서도 학습을 잘하고 있는 것을 보여준다. 152개의 layer로 구성되어있으며, 전년도 ILSVRC에서 우승한 GoogleLeNet보다 약 두배의 성능이 좋아졌다.</p>
+<br>
+
+<p align = "center"><img src = "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcx1l7G%2FbtqzR2RurjQ%2FuRBKXJoxhDZdBjqI2BqWnK%2Fimg.png" width = "600px"></p>
+
+<br>
+
+<p>위 그림을 보면 레이어가 점점 깊어지는데 error_rate이 줄어드는 것을 확인할 수 있다. 그렇다면 레이어가 깊어질수록 더 좋은 결과를 보여주는 것이 아닌가?생각이 들 수 있다. 하지만, 앞선 포스트에서도 확인했듯이 CNN의 layer가 많아질수록(깊어질수록) 파라미터의 수가 급격히 늘어남을 확인했었다. 이는 overfitting의 문제가 아닐지라도 에러가 커지는 현상이 발생하게 된다. 무조건적으로 layer를 깊게하는 것이 아닌 다른 방법이 필요하다 생각한 것이고 <code>residual learning</code>을 하게 된 것이다.</p>
+<p>따라서, ResNet팀은 두가지의 원칙을 세웠다고 한다.</p>
+<ol>
+<li>출력 feature-map의 크기가 같은 경우, 해당 모든 layer는 모두 동일한 수의 filter를 갖는다.</li>
+<li>feature-map의 크기가 절반으로 작아지는 경우는 연산량의 균형을 맞추기 위해 필터의 수를 두배로 늘린다. Feature-map의 크기를 줄일 때는 pooling을 사용하는 대신에 convolution을 수행할 때, stride의 크기를 “2”로 하는 방식을 취한다.</li>
+</ol>
+<p>연산량에 대해서는 자세히 배운 후 다시 다뤄보도록 하겠다. 우선, maxpooling과 dropout이 이 네트워크에선 쓰이지 않았다고 한다. 쓰이지 않은 이유를 알기 전에 먼저 maxpooling과 dropout을 알아보겠다.</p>
+<hr>
+<br>
+
+<h2 id="maxpooling2d"><a href="#maxpooling2d" class="headerlink" title="maxpooling2d"></a>maxpooling2d</h2><p>convolution layer의 출력 이미지에서 주요값만 뽑아 크기가 작은 출력영상으로 만드는 역할이다. 이 layer는 사소한 변화가 영향을 미치지 않도록 한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MaxPooling2D(pool_size = (<span class="number">2</span>,<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<p><code>pool_size</code>가 (2,2)이면 입력영상의 크기가 절반으로 줄어든다.</p>
+<p>예를 들어, <code>input_shape</code>이 4X4 이고, <code>pool_size</code>가 2,2일 때를 도식화 하면 다음과 같다. 녹색은 입력영상을, 노란색은 <code>pool_size</code>에 따라 나눈 경계를, pool마다 가장 큰값(max)을 선택하여 파란블럭으로 만들면, 그것이 <code>output</code>이 된다.</p>
+<p align = "center"><img src ="http://tykimos.github.io/warehouse/2017-1-27_CNN_Layer_Talk_lego_12.png", width = "700px"></p>
+
+<p>이것이 <code>translation</code>에 굉장히 좋은 결과를 얻게되는데 그 이유는 밑의 그림을 통해 한눈에 알아볼 수 있다.</p>
+<p align = "center"><img src = "http://tykimos.github.io/warehouse/2017-1-27_CNN_Layer_Talk_lego_13.png", width = "700px"></p>
+
+<p>결론적으로 분류 작업에 유리한 불변성질(invariance)를 얻을 수 있는 장점도 있다.</p>
+<p>하지만 ResNet-152에서는 maxpooling을 가급적 사용하지 않았다(except 1 layer). maxpooling은 이미지 구성요소의 공간관계에 대한 정보를 잃기 때문이다. 이는 위치와 상관없이 객체를 동일하게 인식하지만, 방향(orientation)이나 비율(proportion)이 달라지면 서로 다른 객체로 인식하게 된다. 특히 시점(viewpoint)변화에 유독 취약하다. 이를 해결하기 위해 data augmentation을 사용하지만 학습시간이 증가하게 되는 단점이 생기게 된다.</p>
+<p>제프리 힌턴교수는 CNN의 층을 쌓는 대신, 캡슐망을 고안해냈는데 이는 나의 범위를 넘어가므로 먼훗날.. 다시 다뤄보겠다.</p>
+<hr>
+<br>
+
+<h2 id="dropout"><a href="#dropout" class="headerlink" title="dropout"></a>dropout</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Dropout(<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>layer가 많아질 때 대표적으로 발생하는 문제는 overfitting이다. 아래 그림처럼 unseparable한 상황임에도 불구하고 억지로 separate하는 상황을 overfitting이라고 한다.</p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/20210121_203242.jpg"></p>
+<p>overfitting을 방지하는 방법은 세가지가 있다고 한다.</p>
+<ol>
+<li>training data를 늘리기</li>
+<li>feature의 수를 줄이기</li>
+<li><strong>regularization</strong></li>
+</ol>
+<p align= "center"><img src = "https://t1.daumcdn.net/cfile/tistory/2264014957A0248C2D"></p>
+
+<p>이 중 Dropout은 regularization에 해당한다. <code>reLU</code>도 이에 해당한다. Dropout은 일부 neuron을 제거하여 다음 학습에 필요하지 않도록 만드는 것이다. 그렇다면 이게 왜 좋은 방법인 것인가?<br>“사공이 많으면 배가 산으로간다”라고 생각하면 좋다. 고양이임을 판단할 때 귀,꼬리,발톱,손,눈 등을 판단하는 여러 weight이 있다고 생각할 때, dropout을 통해 몇개의 노드들을 쉬게하는 것이다.<br>위의 예제에서는 20퍼센트의 neuron들을 쉬게하는것이다. 노드들의 정보는 남기고 connection만 삭제하는 <code>dropconnect</code>같은 방법도 있다고 한다.</p>
+<p>위의 오버피팅을 줄이기 위해서 <code>ensenble</code>이라는 방법을 사용한다고 한다. 이는 ResNet-152에서도 사용했다고 하는데 2~5%정도의 예측률이 올라간다고 한다. 이또한 나중에 다뤄보겠다.</p>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a target="_blank" rel="noopener" href="https://tykimos.github.io/2017/01/27/CNN_Layer_Talk/">https://tykimos.github.io/2017/01/27/CNN_Layer_Talk/</a><br><a target="_blank" rel="noopener" href="https://www.kakaobrain.com/blog/9">https://www.kakaobrain.com/blog/9</a><br><a target="_blank" rel="noopener" href="http://blog.creation.net/mxnet-part-5-vgc16-resnet152">http://blog.creation.net/mxnet-part-5-vgc16-resnet152</a><br><a target="_blank" rel="noopener" href="https://doorbw.tistory.com/147">https://doorbw.tistory.com/147</a><br><a target="_blank" rel="noopener" href="https://pythonkim.tistory.com/42">https://pythonkim.tistory.com/42</a></p>
+<p><a name="footnote_1">1</a> : Shah, P. H. &amp; Venkatesh, R. Pulp/tooth ratio of mandibular frst and second molars on panoramic radiographs: an aid for forensic<br>age estimation. J. Forensic Dent. Sci. 8, 112. <a target="_blank" rel="noopener" href="https://doi.org/10.4103/0975-1475.186374">https://doi.org/10.4103/0975-1475.186374</a> (2016).<br><a name="footnote_2">2</a> : Mathew, D. G. et al. Adult forensic age estimation using mandibular frst molar radiographs: a novel technique. J. Forensic Dent. Sci. 5, 56–59. <a target="_blank" rel="noopener" href="https://doi.org/10.4103/0975-1475.114552">https://doi.org/10.4103/0975-1475.114552</a> (2013).<br><a name="footnote_3">3</a> : He, K., Zhang, X., Ren, S. &amp; Sun, J. Deep residual learning for image recognition. In 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), Las Vegas, NV, 2016, 770–778, <a target="_blank" rel="noopener" href="https://doi.org/10.1109/CVPR.2016.90">https://doi.org/10.1109/CVPR.2016.90</a>.</p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/21/aais-02/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-01-21
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AI/" title="AI">
+                        <b>#</b> AI
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/tensorflow/" title="tensorflow">
+                        <b>#</b> tensorflow
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/keras/" title="keras">
+                        <b>#</b> keras
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Agian-CNN"><span class="toc-text">Agian CNN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Review-the-reports"><span class="toc-text">Review the reports</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tooth-wise-age-group-prediction-with-CNN-model"><span class="toc-text">Tooth-wise age-group prediction with CNN model</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ResNet-152"><span class="toc-text">ResNet-152?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#maxpooling2d"><span class="toc-text">maxpooling2d</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dropout"><span class="toc-text">dropout</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
