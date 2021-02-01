@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[AAIS] E06. Grad-CAM | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[AAIS] E06. Grad-CAM</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-02-01
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/AI/" title="AI">
+                    <b>#</b> AI
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/keras/" title="keras">
+                    <b>#</b> keras
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Before-start-Check-resources"><a href="#Before-start-Check-resources" class="headerlink" title="Before start Check resources"></a>Before start Check resources</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!nvidia-smi</span><br></pre></td></tr></table></figure>
+<pre><code>Mon Feb  1 09:11:32 2021
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 410.104      Driver Version: 410.104      CUDA Version: 10.1     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|===============================+======================+======================|
+|   0  Tesla V100-DGXS...  On   | 00000000:07:00.0 Off |                    0 |
+| N/A   65C    P0   286W / 300W |  31558MiB / 32478MiB |     97%      Default |
++-------------------------------+----------------------+----------------------+
+|   1  Tesla V100-DGXS...  On   | 00000000:08:00.0 Off |                    0 |
+| N/A   61C    P0   228W / 300W |   2630MiB / 32478MiB |     94%      Default |
++-------------------------------+----------------------+----------------------+
+|   2  Tesla V100-DGXS...  On   | 00000000:0E:00.0 Off |                    0 |
+| N/A   63C    P0   238W / 300W |   5264MiB / 32478MiB |     98%      Default |
++-------------------------------+----------------------+----------------------+
+|   3  Tesla V100-DGXS...  On   | 00000000:0F:00.0 Off |                    0 |
+| N/A   63C    P0   248W / 300W |  14704MiB / 32478MiB |     96%      Default |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                       GPU Memory |
+|  GPU       PID   Type   Process name                             Usage      |
+|=============================================================================|
++-----------------------------------------------------------------------------+</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># using gpu:/2</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&quot;CUDA_VISIBLE_DEVICES&quot;</span>] = <span class="string">&quot;2&quot;</span></span><br><span class="line"></span><br><span class="line">gpus = tf.config.experimental.list_physical_devices(<span class="string">&#x27;GPU&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> gpus:</span><br><span class="line">  <span class="keyword">try</span>:</span><br><span class="line">    tf.config.experimental.set_memory_growth(gpus[<span class="number">0</span>], <span class="literal">True</span>)</span><br><span class="line">  <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">    print(e)</span><br></pre></td></tr></table></figure>
+<h1 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> keras.applications <span class="keyword">import</span> VGG16</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> layers</span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> keras.applications.vgg16 <span class="keyword">import</span> preprocess_input, decode_predictions</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> keras.preprocessing <span class="keyword">import</span> image</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> backend <span class="keyword">as</span> K</span><br><span class="line"><span class="keyword">import</span> cv2</span><br></pre></td></tr></table></figure>
+<h1 id="Using-VGG16-for-Grad-CAM"><a href="#Using-VGG16-for-Grad-CAM" class="headerlink" title="Using VGG16 for Grad-CAM"></a>Using VGG16 for Grad-CAM</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = tf.keras.applications.vgg16.VGG16()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.summary()</span><br></pre></td></tr></table></figure>
+<pre><code>Model: &quot;vgg16&quot;
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+input_1 (InputLayer)         [(None, 224, 224, 3)]     0
+_________________________________________________________________
+block1_conv1 (Conv2D)        (None, 224, 224, 64)      1792
+_________________________________________________________________
+block1_conv2 (Conv2D)        (None, 224, 224, 64)      36928
+_________________________________________________________________
+block1_pool (MaxPooling2D)   (None, 112, 112, 64)      0
+_________________________________________________________________
+block2_conv1 (Conv2D)        (None, 112, 112, 128)     73856
+_________________________________________________________________
+block2_conv2 (Conv2D)        (None, 112, 112, 128)     147584
+_________________________________________________________________
+block2_pool (MaxPooling2D)   (None, 56, 56, 128)       0
+_________________________________________________________________
+block3_conv1 (Conv2D)        (None, 56, 56, 256)       295168
+_________________________________________________________________
+block3_conv2 (Conv2D)        (None, 56, 56, 256)       590080
+_________________________________________________________________
+block3_conv3 (Conv2D)        (None, 56, 56, 256)       590080
+_________________________________________________________________
+block3_pool (MaxPooling2D)   (None, 28, 28, 256)       0
+_________________________________________________________________
+block4_conv1 (Conv2D)        (None, 28, 28, 512)       1180160
+_________________________________________________________________
+block4_conv2 (Conv2D)        (None, 28, 28, 512)       2359808
+_________________________________________________________________
+block4_conv3 (Conv2D)        (None, 28, 28, 512)       2359808
+_________________________________________________________________
+block4_pool (MaxPooling2D)   (None, 14, 14, 512)       0
+_________________________________________________________________
+block5_conv1 (Conv2D)        (None, 14, 14, 512)       2359808
+_________________________________________________________________
+block5_conv2 (Conv2D)        (None, 14, 14, 512)       2359808
+_________________________________________________________________
+block5_conv3 (Conv2D)        (None, 14, 14, 512)       2359808
+_________________________________________________________________
+block5_pool (MaxPooling2D)   (None, 7, 7, 512)         0
+_________________________________________________________________
+flatten (Flatten)            (None, 25088)             0
+_________________________________________________________________
+fc1 (Dense)                  (None, 4096)              102764544
+_________________________________________________________________
+fc2 (Dense)                  (None, 4096)              16781312
+_________________________________________________________________
+predictions (Dense)          (None, 1000)              4097000
+=================================================================
+Total params: 138,357,544
+Trainable params: 138,357,544
+Non-trainable params: 0
+_________________________________________________________________</code></pre>
+<h1 id="Preprocess-the-image"><a href="#Preprocess-the-image" class="headerlink" title="Preprocess the image"></a>Preprocess the image</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">img_path = <span class="string">&#x27;../sungjin/dog/test/bo/bo_26.jpg&#x27;</span></span><br><span class="line">img = image.load_img(img_path,target_size=(<span class="number">224</span>,<span class="number">224</span>))</span><br><span class="line">x = image.img_to_array(img)</span><br><span class="line">x = np.expand_dims(x,axis=<span class="number">0</span>)</span><br><span class="line">x = preprocess_input(x)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(img)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f7a885bc520&gt;</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_10_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">preds = model.predict(x)</span><br><span class="line">print(preds.shape)</span><br><span class="line">print(<span class="string">&#x27;Predicted:&#x27;</span>,decode_predictions(preds,top=<span class="number">3</span>)[<span class="number">0</span>])</span><br><span class="line">print(np.argmax(preds[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>(1, 1000)
+Predicted: [(&#39;n02113799&#39;, &#39;standard_poodle&#39;, 0.21771519), (&#39;n02111277&#39;, &#39;Newfoundland&#39;, 0.19664182), (&#39;n02097130&#39;, &#39;giant_schnauzer&#39;, 0.16597004)]
+267</code></pre>
+<h1 id="About-equation"><a href="#About-equation" class="headerlink" title="About equation"></a>About equation</h1><br>
+
+<h2 id="Grad-CAM"><a href="#Grad-CAM" class="headerlink" title="Grad-CAM"></a>Grad-CAM</h2><br>
+
+
+
+
+<p> For each class c in the CNN, Grad−CAM is calculated with a linear combination of the k-th feature maps of the convolutional layer $A_k$ and the importance weight αc<br>K, followed by ReLU activation:</p>
+<br>
+
+<p align = center><img src ="/image/10.jpg"></p>
+<p align = center><img src = "/image/20.jpg"</p>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># layer which calculate `score class`</span></span><br><span class="line">conv_layer = model.get_layer(<span class="string">&quot;block5_conv3&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">heatmap_model = models.Model([model.inputs],[conv_layer.output,model.output])</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.GradientTape() <span class="keyword">as</span> gtape:</span><br><span class="line">    conv_output, predictions = heatmap_model(x) <span class="comment"># y^c, c</span></span><br><span class="line">    loss = predictions[:, np.argmax(predictions[<span class="number">0</span>])] <span class="comment"># probability</span></span><br><span class="line">    grads = gtape.gradient(loss, conv_output) <span class="comment"># partial-derivative</span></span><br><span class="line">    pooled_grads = K.mean(grads, axis=(<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>)) <span class="comment"># a_k^c , weight</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">heatmap = tf.reduce_mean(tf.multiply(pooled_grads, conv_output), axis=-<span class="number">1</span>) <span class="comment"># summation weight * filter</span></span><br><span class="line">heatmap = np.maximum(heatmap, <span class="number">0</span>) <span class="comment"># ReLu</span></span><br><span class="line">max_heat = np.<span class="built_in">max</span>(heatmap) <span class="comment"># normalization</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> max_heat == <span class="number">0</span>:</span><br><span class="line">    max_heat = <span class="number">1e-10</span></span><br><span class="line">heatmap /= max_heat</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plt.matshow(heatmap[<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f7c992031c0&gt;</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_17_1.png" alt="png"></p>
+<h1 id="Visualize-Grad-CAM"><a href="#Visualize-Grad-CAM" class="headerlink" title="Visualize Grad-CAM"></a>Visualize Grad-CAM</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># img = mpimg.imread(img_path)</span></span><br><span class="line">img = cv2.imread(img_path)</span><br><span class="line">hm = heatmap[<span class="number">0</span>]</span><br><span class="line">hm = cv2.resize(hm, (img.shape[<span class="number">1</span>],img.shape[<span class="number">0</span>]))</span><br><span class="line">hm = np.uint8(<span class="number">255</span>*hm)</span><br><span class="line">hm = cv2.applyColorMap(hm,cv2.COLORMAP_JET)</span><br><span class="line">superimposed_img = hm * <span class="number">0.8</span> + img</span><br><span class="line"></span><br><span class="line">superimposed_img[superimposed_img &gt; <span class="number">255</span>] = <span class="number">255</span></span><br><span class="line">superimposed_img = superimposed_img.astype(<span class="string">&#x27;uint8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">plt.imshow(superimposed_img)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&lt;matplotlib.image.AxesImage at 0x7f7c991e5f70&gt;</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/output_19_1.png" alt="png"></p>
+<h1 id="Return-the-resources"><a href="#Return-the-resources" class="headerlink" title="Return the resources"></a>Return the resources</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> IPython</span><br><span class="line">app = IPython.Application.instance()</span><br><span class="line">app.kernel.do_shutdown(<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<pre><code>&#123;&#39;status&#39;: &#39;ok&#39;, &#39;restart&#39;: True&#125;</code></pre>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/01/30/java-day5/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-02-01
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AI/" title="AI">
+                        <b>#</b> AI
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/keras/" title="keras">
+                        <b>#</b> keras
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Before-start-Check-resources"><span class="toc-text">Before start Check resources</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Setup"><span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-VGG16-for-Grad-CAM"><span class="toc-text">Using VGG16 for Grad-CAM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Preprocess-the-image"><span class="toc-text">Preprocess the image</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#About-equation"><span class="toc-text">About equation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Grad-CAM"><span class="toc-text">Grad-CAM</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Visualize-Grad-CAM"><span class="toc-text">Visualize Grad-CAM</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Return-the-resources"><span class="toc-text">Return the resources</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
