@@ -143,7 +143,282 @@
           
       </div>
       <div class="markdown-body">
-        
+        <p align = 'center'><img src = "https://user-images.githubusercontent.com/12427330/103539943-44dc6c00-4edc-11eb-8dbb-9d6f3bacf911.png"></p>
+
+<p>이 스터디는 백기선님의 유튜브로 진행되는 live study입니다.</p>
+<br>
+
+<h1 id="Day08-인터페이스"><a href="#Day08-인터페이스" class="headerlink" title="Day08. 인터페이스"></a>Day08. 인터페이스</h1><br>
+
+
+<h2 id="Review-Day07"><a href="#Review-Day07" class="headerlink" title="Review Day07"></a>Review Day07</h2><hr>
+<blockquote>
+</blockquote>
+<h2 id="Day08-인터페이스-1"><a href="#Day08-인터페이스-1" class="headerlink" title="Day08. 인터페이스"></a>Day08. 인터페이스</h2><hr>
+<br>
+
+
+
+<h3 id="What-is-Interface"><a href="#What-is-Interface" class="headerlink" title="What is Interface"></a>What is Interface</h3><hr>
+<br>
+
+
+
+
+
+<p>인터페이스 하면 남자들은 가장 많이 떠오르는 것이 게임하면서 본 인터페이스다(?). 반가운 단어지만 이제부터 다뤄볼 인터페이스는 다른얘기이다.</p>
+<p>인터페이스란 일종의 <strong>추상클래스</strong>이다. 인터페이스는 추상클래스처럼 추상메서드를 갖지만 추상클래스보다 추상화정도가 높아서 추상클래와 달리 몸통을 갖춘 일반 메서드 또는 멤버변수를 구성원으로 가질 수 없다.</p>
+<p>오직 <strong>추상메서드</strong>와 <strong>상수</strong>만을 멤버로 가질 수 있으며, 그 외의 다른 <strong>어떠한 요소</strong>도 가질 수 없다.</p>
+<p>추상클래스를 <code>미완성 설계도</code>라고 한다면 인터페이스는 <code>기본 설계도</code>라고 할 수 있다.</p>
+<p>또한, 추상클래스는 ==”is-a : ~는 ~이다”==의 개념이고, 인터페이스는 ==”has-a: ~는 ~를 할 수 있다.”==의 개념이다.</p>
+<p>ex. SSON은 사람 Person 이면서 코딩(Developable)을 할 수 있다.</p>
+<ul>
+<li>class SSON <strong>extends</strong> Person <strong>implements</strong> Developable</li>
+</ul>
+<p>이제부터 인터페이스의 사용법과 사용이유에 대해서 다뤄보도록 하겠다.</p>
+<br>
+
+
+
+
+
+
+<h3 id="How-to-define-Interface"><a href="#How-to-define-Interface" class="headerlink" title="How to define Interface"></a>How to define Interface</h3><hr>
+<br>
+
+
+
+<p>인터페이스를 정의 하는 것은 클래스와 동일하다. 키워드로 class 대신 interface를 사용한다는 것만 다르다. interface의 접근제어자는 public 또는 default를 사용할 수 있다.</p>
+<p>예시는 다음과 같다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">howToMakeInterface</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> 상수이름 = 값;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> 메서드이름(매개변수);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>인터페이스는 다음과 같은 제약조건이 있다.</p>
+<ol>
+<li>모든 멤버변수는 public static final 이어야 하며, 이를 생략할 수 있다.</li>
+<li>모든 메서드는 public abstract 이어야 하며, 이를 생략할 수 있다. (단, static메서드와 default메서드는 예외)</li>
+</ol>
+<p>static과 default메서드는 뒤에서 다뤄보도록 하겠다.</p>
+<p>인터페이스에 정의된 모든 멤버에 예외없이 적용되는 사항이기 때문에 제어자를 생략할 수 있는 것이다. 인텔리제이를 사용하다보면 접근제어자를 생략하는 것을 자주 경험하게 되는데 클래스에서 대부분 public을 사용하기 때문에 생략하면 public으로 implicit하게 선언되는 것이기 때문이다.</p>
+<p>이는 컴파일 시에 컴파일러가 자동적으로 추가해준다.</p>
+<br>
+
+
+
+
+
+
+<h3 id="Inherit-Interface"><a href="#Inherit-Interface" class="headerlink" title="Inherit Interface"></a>Inherit Interface</h3><hr>
+<br>
+
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Movable</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>; <span class="comment">// public abstract가 생략되었다.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Attackable</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">attack</span><span class="params">(Unit u)</span></span>; <span class="comment">// public abstract가 생략되었다.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Fightable</span> <span class="keyword">extends</span> <span class="title">Movable</span>, <span class="title">Attackable</span></span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>클래스의 상속과 마찬가지로 자손 인터페이스(Fightable)는 조상 인터페이스(Movable, Attackable)에 정의된 멤버를 모두 상속받는다.</p>
+<p>위에 Fightable 인터페이스는 정의된 멤버가 한개도 없지만 조상 인터페이스에서 정의된 move와 attack을 멤버로 갖게되는 것이다.</p>
+<p>또한, 인터페이스는 인터페이스로부터만 상속을 받을 수 있다. 당연한 것일수도 있는데 자손이 추상클래스만 선언이 가능한데 부모 클래스가 추상클래스가 아닐경우 상속을 받으면 이에 위반되는 경우가 생성될 수 있으므로 당연한 것이다.</p>
+<p>인터페이스의 상속 구조에서는</p>
+<p><strong>→ 서브 인터페이스는 수퍼 인터페이스의 메서드까지 모두 구현해야 한다.</strong></p>
+<p>→ <strong>인터페이스 레퍼런스는</strong> 인터페이스를 <strong>구현한 클래스의 인스턴스를 가리킬 수 있고</strong>, 해당 인터페이스에 선언된 메서드(수퍼 인스턴스 메소드 포함)만 호출 할 수 있다.</p>
+<p><strong>단, 인터페이스는 클래스와 달리 Object와 같은 최상위조상이 존재하지 않는다.</strong></p>
+<br>
+
+
+
+
+<h3 id="How-to-implement-Interface"><a href="#How-to-implement-Interface" class="headerlink" title="How to implement Interface"></a>How to implement Interface</h3><hr>
+<br>
+
+
+
+
+<p>인터페이스도 추상클래스이기 때문에 당연히 그 자체로는 인스턴스를 생성하는 것이 불가능하다.</p>
+<p>추상클래스가 상속을 통해 추상메서드를 완성하는 것처럼, 인터페이스도 자신에 정의된 추상메서드의 몸통을 만들어주는 클래스를 작성해야 한다.</p>
+<p>그 방법은 다음과 같다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 클래스이름 <span class="keyword">implements</span> 인터페이스이름</span>&#123;</span><br><span class="line">	<span class="comment">//추상메서드를 구현.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Fighter</span> <span class="keyword">implements</span> <span class="title">Fightable</span></span>&#123;</span><br><span class="line">	<span class="function">pulic <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;   implement  &#125;</span><br><span class="line">    <span class="function">pulic <span class="keyword">void</span> <span class="title">attack</span><span class="params">(Unit u)</span> </span>&#123;  implement   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>인터페이스는 implements를 사용하여 구현을 하는데 말 그대로 구현을 해야하기 때문이다. 모든 멤버를 구현하지 않을 경우는 abstract를 붙여서 완성되지 않은 클래스임을 명시해줘야한다.</p>
+<p>위처럼 Fightable이라는 interface에 구성되어야할 move, attack과 같은 메서드를 <strong>모두</strong> 작성하지 않을 경우 abstract를 붙여야 한다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Fighter</span> <span class="keyword">implements</span> <span class="title">Fightable</span></span>&#123;</span><br><span class="line">	<span class="function">pulic <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;   implement  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>인터페이스의 이름에는 주로 ~able의 접미사가 붙는 경우가 많은데, 그 이유는 어떠한 기능 또는 행위를 하는데 필요한 메서드를 제공한다는 의미를 직관적으로 알게하기 위함이다. 반드시 ‘able’로 끝나야하는 것은 아니지만 가독성을 높이기위해서는 따르는 것이 좋을 것이다.</p>
+<br>
+
+
+
+
+
+
+
+<h3 id="Multiple-Inheritance-of-Interface"><a href="#Multiple-Inheritance-of-Interface" class="headerlink" title="Multiple Inheritance of Interface"></a>Multiple Inheritance of Interface</h3><hr>
+<br>
+
+
+
+
+
+<p>다중상속을 할 때, 멤버변수의 이름이 같거나 메서드의 선언부가 일치하고 구현 내용이 다르다면 어떤 조상의 것인지 불분명하기 때문에 자바에서는 다중상속을 허용하지 않는다.</p>
+<p>또 다른 객체지향언어인 C++에서는 다중상속을 허용하기 때문에 다중상속의 단점이 부각되지만 인터페이스로 다중상속을 구현할 수 있다.</p>
+<p>다중상속을 위해서 인터페이스를 사용하는 것은 아니므로 헷갈리지 말자.</p>
+<p>상위 인터페이스에 있는 메서드 중에서 <strong>메서드 명과 파라미터 형식은 같지만 리턴 타입이 다른</strong> 메서드가 있다면, 둘중 어떤 것을 상속받느냐에 따라 <strong>규칙이 달라지기 때문에 다중 상속이 불가능</strong>하다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tv</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">boolean</span> power;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> channel;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> volume;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">power</span><span class="params">()</span> </span>&#123; power = ! power;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelUp</span><span class="params">()</span> </span>&#123; channel++;&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">channelDown</span><span class="params">()</span> </span>&#123; channel--;&#125;;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VCR</span></span>&#123;</span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">int</span> counter;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCounter</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> counter;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IVCR</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCounter</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TVCR</span> <span class="keyword">extends</span> <span class="title">Tv</span> <span class="keyword">implements</span> <span class="title">IVCR</span></span>&#123;</span><br><span class="line">    VCR vcr = <span class="keyword">new</span> VCR();</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCounter</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> vcr.getCounter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위와같이 다중상속을 허용할 수 있다.</p>
+<br>
+
+
+
+
+<h3 id="How-to-use-the-implementation-using-reference"><a href="#How-to-use-the-implementation-using-reference" class="headerlink" title="How to use the implementation using reference"></a>How to use the implementation using reference</h3><hr>
+<br>
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">getName</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getLegs</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<br>
+
+
+
+<p>위와 같이 <code>Animal</code>이라는 interface가 있다고 하자.</p>
+<br>
+
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">implements</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;새&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLegs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">implements</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;고양이&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getLegs</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">4</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+
+
+
+<p><code>Bird</code>와 <code>Cat</code>이라는 <code>Animal</code> interface를 구현한 class가 있을 때, 두 클래스를 인스턴스화 하여 메서드를 호출해보자.</p>
+<br>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Cat cat = <span class="keyword">new</span> Cat();</span><br><span class="line">Bird bird = <span class="keyword">new</span> Bird();</span><br><span class="line"></span><br><span class="line">System.out.println(cat.getName()); <span class="comment">// 고양이</span></span><br><span class="line">System.out.println(cat.getLegs()); <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">System.out.println(bird.getName()); <span class="comment">// 새</span></span><br><span class="line">System.out.println(bird.getLegs()); <span class="comment">// 2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<br>
+
+
+
+<p>또한, 인스턴스들은 interface타입으로 생성이 가능하다.</p>
+<br>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Animal cat = <span class="keyword">new</span> Cat();</span><br><span class="line">Animal bird = <span class="keyword">new</span> Bird();</span><br></pre></td></tr></table></figure>
+
+
+<br>
+
+
+
+
+<p>Animal 인터페이스를 파라미터로 받는 메소드가 있다면 Cat, Bird 타입의 인스턴스를 파라미터로 사용할 수 있습니다.</p>
+<br>
+
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printAnimal</span><span class="params">(Animal animal)</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;이름 : &quot;</span> + animal.getName());</span><br><span class="line">    System.out.println(<span class="string">&quot;다리 개수 : &quot;</span> + animal.getLegs());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Cat cat = <span class="keyword">new</span> Cat();</span><br><span class="line">Bird bird = <span class="keyword">new</span> Bird();</span><br><span class="line"></span><br><span class="line">printAnimal(cat);</span><br><span class="line">printAnimal(bird);</span><br></pre></td></tr></table></figure>
+
+
+
+<br>
+
+
+
+
+<h3 id="Default-Method-of-Interface-java8"><a href="#Default-Method-of-Interface-java8" class="headerlink" title="Default Method of Interface, java8"></a>Default Method of Interface, java8</h3><hr>
+<br>
+
+
+
+
+<p>java8부터는 Default Method와 Static Method를 선언할 수 있다. static method는 인스턴스를 생성하지 않아도 가능하므로 없을 이유가 없었다.</p>
+<p>static method는 나중에 다뤄보고 우선 default method부터 다뤄보겠다.</p>
+<p>들어가기에 앞서 default method가 필요한 이유에 대해서 얘기해보겠다.</p>
+<blockquote>
+<p>Q. 만약 당신이 유명한 RPG게임의 제작자라고 하자. 직업군이 총 256가지인 게임이라고 할 때, 인터페이스에 아이템 강화시스템을 도입한다고 한다. 인터페이스에 강화시스템을 도입한다면 추상메서드이기 때문에 구현한 모든 직업군에 따로 정의를 해야할 것이다. 구현 X 256을 한다면 총 얼마의 시간이 걸리겠는가?</p>
+</blockquote>
+<p>정말 최악이다. 구현을 간단하게 한다 쳐도 256번을 반복하라니 정말 최악이다. 하지만 interface에 default method 즉, 기본으로 생성할 수 있는 method가 없을 경우의 얘기이다.</p>
+<p>디폴트 메서드는 추상 메서드의 기본적인 구현을 제공하는 메서드로, <strong>추상 메서드가 아니기 때문에</strong> 디폴트 메서드가 새로 추가되어도 해당 인터페이스를 구현한 클래스를 변경하지 않아도 된다.</p>
+<p>이 때, 새로 추가된 디폴트 메서드가 기존의 메서드와 이름이 중복되어 충돌하는 경우가 발생할 수 있다. 이럴 경우는 다음의 규칙을 따른다.</p>
+<ol>
+<li><p>여러 인터페이스의 디폴트 메서드간의 충돌</p>
+<ul>
+<li>인터페이스를 구현한 클래스에서 디폴트 메서드를 오버라이딩해야한다.</li>
+</ul>
+</li>
+<li><p>디폴트 메서드와 조상 클래스의 메서드간의 충돌</p>
+<ul>
+<li>조상 클래스의 메서드가 상속되고, 디폴트 메서드는 무시된다.</li>
+</ul>
+</li>
+</ol>
+<p>위의 경우를 코드로 살펴보겠다.</p>
+<p align = 'center'><img src = "/image/ab.jpg"></p>
+
+<p>위와같이 1.같은 경우에는 디폴트 메서드간의 충돌이 일어나서 컴파일시 오류가 나는 경우이다.</p>
+<p align = 'center'><img src = "/image/makea.jpg"></p>
+
+<p>위와같이 2.같은 경우에는 조상 클래스의 printMethod가 실행됨을 알 수 있다.</p>
+<br>
+
+
+
+
+
+<h3 id="Static-Method-of-Interface-java8"><a href="#Static-Method-of-Interface-java8" class="headerlink" title="Static Method of Interface, java8"></a>Static Method of Interface, java8</h3><hr>
+<br>
+
+
+
+
+
+<p>인스턴스 생성과 상관없이 인터페이스 타입으로 호출하는 메소드이다.</p>
+<p>static 예약어를 사용하고, 접근제어자는 항상 public이며 생략 할 수 있다.</p>
+<p>static method는 일반적으로 우리가 정의하는 메소드와는 다르다.</p>
+<ol>
+<li><p>code body가 있어야 한다.</p>
+</li>
+<li><p>implements 한 곳에서 override가 불가능하다.</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">StaticInterface</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">make</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;static make&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">newInterface</span> <span class="keyword">extends</span> <span class="title">StaticInterface</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">make</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;it isn&#x27;t overriding&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위의 <code>StaticInterface</code>의 <code>make</code>를 호출하기 위해서는 <code>StaticInterface.make()</code>를 써야지만 호출이 가능하다.</p>
+<h3 id="Private-Method-of-Interface-java9"><a href="#Private-Method-of-Interface-java9" class="headerlink" title="Private Method of Interface, java9"></a>Private Method of Interface, java9</h3><hr>
+<br>
+
+
+<p>java8 에서는 default method와 static method가 추가 되었고,</p>
+<p>java9 에서는 private method와 private static method가 추가 되었다.</p>
+<p>java8의 default method와 static method는 여전히 불편하게 만든다.</p>
+<p>단지 특정 기능을 처리하는 내부 method일 뿐인데도, 외부에 공개되는 public method로 만들어야하기 때문이다.</p>
+<p>interface를 구현하는 다른 interface 혹은 class가 해당 method에 엑세스 하거나 상속할 수 있는 것을 원하지 않아도, </p>
+<p>그렇게 될 수 있는 것이다.</p>
+<p>java9 에서는 위와 같은 사항으로 인해 private method와 private static method라는 새로운 기능을 제공해준다.</p>
+<p> → 코드의 중복을 피하고 interface에 대한 캡슐화를 유지 할 수 있게 되었다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Car</span> </span>&#123; </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">carMethod</span><span class="params">()</span></span>; </span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">defaultCarMethod</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        System.out.println(<span class="string">&quot;Default Car Method&quot;</span>);</span><br><span class="line">        privateCarMethod(); privateStaticCarMethod(); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">privateCarMethod</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        System.out.println(<span class="string">&quot;private car method&quot;</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">privateStaticCarMethod</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        System.out.println(<span class="string">&quot;private static car method&quot;</span>); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DefaultCar</span> <span class="keyword">implements</span> <span class="title">Car</span></span>&#123; </span><br><span class="line">    <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">carMethod</span><span class="params">()</span> </span>&#123; </span><br><span class="line">        System.out.println(<span class="string">&quot;car method by DefaultCar&quot;</span>); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<br>
+
+
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><br>
+
+<hr>
+<br>
+
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.notion.so/4b0cf3f6ff7549adb2951e27519fc0e6">https://www.notion.so/4b0cf3f6ff7549adb2951e27519fc0e6</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.baesangwoo.dev/posts/java-livestudy-8week/">https://blog.baesangwoo.dev/posts/java-livestudy-8week/</a></li>
+<li><a target="_blank" rel="noopener" href="https://dev-coco.tistory.com/13">https://dev-coco.tistory.com/13</a></li>
+</ol>
+
       </div>
       
         <div class="prev-or-next">
@@ -203,6 +478,18 @@
       
     </div>
     
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Day08-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4"><span class="toc-text">Day08. 인터페이스</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Review-Day07"><span class="toc-text">Review Day07</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Day08-%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4-1"><span class="toc-text">Day08. 인터페이스</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-Interface"><span class="toc-text">What is Interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-define-Interface"><span class="toc-text">How to define Interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inherit-Interface"><span class="toc-text">Inherit Interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-implement-Interface"><span class="toc-text">How to implement Interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multiple-Inheritance-of-Interface"><span class="toc-text">Multiple Inheritance of Interface</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#How-to-use-the-implementation-using-reference"><span class="toc-text">How to use the implementation using reference</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Default-Method-of-Interface-java8"><span class="toc-text">Default Method of Interface, java8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Static-Method-of-Interface-java8"><span class="toc-text">Static Method of Interface, java8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Private-Method-of-Interface-java9"><span class="toc-text">Private Method of Interface, java9</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
 
     
       <div class="comments-container">
