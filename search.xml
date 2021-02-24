@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>[AAIS] After Finishing Internship</title>
+      <link href="2021/02/24/aais-final/"/>
+      <url>2021/02/24/aais-final/</url>
+      
+        <content type="html"><![CDATA[<h1 id="AAIS-인턴을-마무리하며"><a href="#AAIS-인턴을-마무리하며" class="headerlink" title="AAIS 인턴을 마무리하며"></a>AAIS 인턴을 마무리하며</h1><hr><br><h2 id="1-다른-주제들에-대해서"><a href="#1-다른-주제들에-대해서" class="headerlink" title="1. 다른 주제들에 대해서"></a>1. 다른 주제들에 대해서</h2><hr><br><p>나는 치아 데이터를 통해 나이를 추정하는 것을 해보았지만, 같은 인턴들 중에는 트랜스포머를 다룬분이 세분이나 계셨다.</p><p>트랜스포머는 자연어처리를 함에 있어서 최근 가장 핫한 주제여서 손대볼까 했지만 나는 기본부터(?) 차근차근 해나가는 걸 해보고 싶어서 저 주제를 선택했던 것이다.</p><p>트랜스포머에 대해서 따로 공부하진 않았지만 세분 덕에 많은 것을 배웠다.</p><ol><li>Transformer의 Attention의 역할</li><li>Embedding을 했을 때와 안했을 때 PCA와 t-sne를 통한 관찰</li><li>Positional Encoding의 유무로 달라지는 Attention의 관계</li></ol><p>나중에 자연어처리에 대해서 공부하게 된다면 이번 인턴을 통해서 얻은 지식을 충분히 활용할 수 있을 것 같았다.</p><p>또한, 신호처리를 하신분도 계셨는데 이 데이터도 더 발전시킨다면 심전도그래프나 다른 심박수 그래프같은 것이 일정시간 지나면 의사에게 바로 신호가 가는 시스템도 만들 수 있을 것 같았다.</p><p>워낙 의료분야에는 변수도 많고 전제조건이 많아서 이를 다 포함하는 네트워크가 만들어질 수 있을진 모르겠지만 분명한건 정말 만들어질 것 같다.</p><p>진짜다.</p><br><h2 id="2-나의-주제에-대해서"><a href="#2-나의-주제에-대해서" class="headerlink" title="2. 나의 주제에 대해서"></a>2. 나의 주제에 대해서</h2><hr><br><p>짧게 연구주제에 대해서 요약하자면</p><ol><li>ImageNet을 학습했던 ResNet-152를 Transfer Learning(전이학습)을 하였다.</li><li>데이터 분포의 차이가 커서 base model을 freeze하지 않고 Full Layer Training을 하였다.</li><li>Overfitting을 막고자 data augmentation(Flip, Brightness, Rotation)을 하였다.</li><li>공간정보를 잃지 않기 위해 일반적인 Flatten Layer보다 Global Average Pooling + FC 층을 classifier로 사용하였다.</li><li>Majority Voting System을 통해 Accuracy를 높였다.</li></ol><br><p align = 'center'><img src = '/image/result.jpg'></p><center>그림1.[연구결과 요약]</center><br><p>우선 결과는 좋지 않은 편이었다. 김승현박사님과 노영균교수님이 진행했던 프로젝트를 리빌딩하는 주제나 다름이 없었는데 기본적인 accuracy 측면에서 좋지 못했다.</p><p>AUC score만 봤을 때도 좋지 못한 편이었는데 적게는 5%부터 많게는 10%까지 수치가 차이가 났다.</p><p>정말 아쉬운 결과였지만 교수님과 조교님들에게 조언을 받아 발전시킬 수 있을 것이라 생각한다.</p><p>한 조교님이 같은 주제를 이어서 하고 계시는데, Global Average Pooling층이 아닌 Flatten + FC층도 좋은 결과가 나오고 있다고 한다.</p><p>나는 <code>x = keras.layers.Flatten()(x)</code>이후에 base model의 필터의 갯수인 2048개를 연결해보고 점점 줄여져 나가는 형식으로 진행했었다.</p><p>그리고 GAP층으로 했을 때도 필터의 수를 늘릴 수 있다고 생각하지 못해서 이것보다 늘리지 못했었는데, Flatten을 하게되면 기본적으로 1차원벡터로 길게 늘어나는데, 이 때는 Node의 수를 2048개보다 늘릴 수 있다는 생각을 간과했었다.</p><p>validation accuracy가 0.88정도로 수렴했다고 하는데 나보다 무려 10퍼센트나 높은 수치였다. 그리고 실제 논문에서도 0.87정도로 수렴했기 때문에 더 좋은 방법이라 생각한다.</p><br><p align = 'center'><img src = '/image/grad.jpg'></p><center>그림2.[Grad-CAM을 이용한 네트워크 내부관찰]</center><br><p>역시 시각화시키는 것이 흥미유발이 잘되는 것 같다.</p><p>Loss가 줄어들면서 학습이 되어나가는 짜릿함도 있지만 시각화됐을 때 어떤 요소가 class를 결정짓는데 중요한 역할을 했는지 볼 수 있는 Grad-CAM같은 것도 알게되어 좋았다.</p><p>또한, 프로젝트를 발표하면서 교수님의 조언도 도움이 되었다. 연구가설과 연구결과로 인해 얻을 수 있는 점을 기술하지 않았는데</p><p>이를 명확히 하는 것이 보기 좋을 것 같고 프로젝트의 의미를 와닿게 설명하는 것이라 생각한다.</p><br><h2 id="3-마무리-지으며"><a href="#3-마무리-지으며" class="headerlink" title="3. 마무리 지으며"></a>3. 마무리 지으며</h2><hr><br><p>교수님과 조교님들에게 많은 것을 배운 시간들이었다.</p><p>중간에 장청재박사님의 발표연습도 구경해봤고 어떻게 발표를 구상해야 짧은시간내에 흥미유발과 정보전달이 잘될지 알게 되었다.</p><p>처음에는 아무것도 모르고 시작한 것이라 잘 모르고 응용부터 시작하려했는데 교수님께서 원리를 놓치지 말고 공부하라고 조언 해주셔서 원리를 알고 적용을 시켰다.</p><p>짧은 시간이었지만 정말 많은것을 배웠다.</p><p>이제는 졸업프로젝트로 다시 시작해보겠다.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> AAIS </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> AAIS </tag>
+            
+            <tag> keras </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[Java] Day08 - 인터페이스</title>
       <link href="2021/02/15/java-day8/"/>
       <url>2021/02/15/java-day8/</url>
