@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[WearMask] E00.Capstone Project | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[WearMask] E00.Capstone Project</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-03-15
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/WearMask/" title="WearMask">
+                    <b>#</b> WearMask
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/AAIS/" title="AAIS">
+                    <b>#</b> AAIS
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/WearMask/" title="WearMask">
+                    <b>#</b> WearMask
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Capstone/" title="Capstone">
+                    <b>#</b> Capstone
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/DeepLearning/" title="DeepLearning">
+                    <b>#</b> DeepLearning
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Capstone-Software-project"><a href="#Capstone-Software-project" class="headerlink" title="Capstone Software project"></a>Capstone Software project</h1><p><br></br></p>
+<h2 id="시작하기에-앞서"><a href="#시작하기에-앞서" class="headerlink" title="시작하기에 앞서"></a>시작하기에 앞서</h2><hr>
+<p> 캡스톤소프트웨어프로젝트를 수강하며 졸업프로젝트를 진행하려고 한다.</p>
+<p>캡스톤프로젝트는 학교에서 프로젝트 주제를 정해주고 마음에 드는 주제를 정하여 교수님과 컨택하여 정하는 방식으로 진행된다.</p>
+<p>나는 그 중 <strong>마스크 착용 감지 알람 시스템</strong>을 선택하게 되었다.</p>
+<p>선택하게된 가장 큰 이유는 방학 중 <strong>AAIS</strong>에서 노영균교수님의 지도하에 이미지분류 딥러닝 모델을 공부했었기 때문이다.</p>
+<p>또한, 랩실 인턴을하면서 이미지를 가지고 활용할 수 있는 분야가 무궁무진하다 생각했기 때문이다.</p>
+<center><img src = "/image/tsne.jpg"/></center>
+<center>[그림 1] PCA(위), t-SNE(아래)를 통해 이미지 분포 비교</center>
+
+<p><br></br></p>
+<p> 위의 이미지는 Nature지에 실린 [Efficient neural network compression via transfer learning for machine<br>vision inspection]논문에서 발췌한 이미지이다.</p>
+<p>비록, 분류하려는 이미지가 전이학습(Transfer Learning)할 모델의 학습데이터인 /imageNet과 분포가 다른데도 불구하고 <strong>전이학습을 해야만 한다는 것이다.</strong></p>
+<p>이미지 인식을 조금 더 배우고 적용시켜보고싶다는 생각에 위와같은 주제를 선택하였다.</p>
+<p><br></br></p>
+<h2 id="마스크-착용-감지"><a href="#마스크-착용-감지" class="headerlink" title="마스크 착용 감지?"></a>마스크 착용 감지?</h2><hr>
+<p> 구글링을 해보면 마스크 착용을 구분하는 모델이 굉장히 많이 나와있다.</p>
+<p>실제로 그를 적용시켜보면 학습이 잘되어 있는 것처럼보인다.</p>
+<p>우선, webcam을 열고 cvlib에서 제공하는 <code>detect_face</code>를 사용하면 얼굴을 검출해주고 딥러닝 모델을 통해 마스크를 썼는지 안썼는지 판단해준다.</p>
+<p>그럼 더이상 진행할 이유가 없지 않은가?</p>
+<p><strong>하지만 큰 문제가 있다.</strong></p>
+<p>그 문제를 지금부터 살펴볼까 한다.</p>
+<p><br></br></p>
+<h2 id="Face-Detection"><a href="#Face-Detection" class="headerlink" title="Face Detection"></a>Face Detection</h2><hr>
+<center><img src = "/image/test.jpg"/></center>
+<center>[그림 2] 프로토타입</center>
+
+<p><br></br></p>
+<p> 간단하게 만들어본 모델을 사용할 시 위와같은 결과가 나온다.</p>
+<p>얼굴인식이 cvlib에서 제공하는 메서드를 사용할 경우 어느정도는 얼굴인식을 하지만 사람이 멀어질 수록 검출을 못한다.</p>
+<p>또한, cvlib의 face detection은 마스크를 쓰지 않은 얼굴을 학습시킨 모델이라 마스크를 썼을 경우 구분을 못하는 경우도 존재한다.</p>
+<p>따라서, 이부분을 먼저 수정해야한다.</p>
+<hr>
+<ol>
+<li><p>OpenCV Haar Training &amp; Cascade Training</p>
+<p>Haar Cascad classifier은 ‘Rapid Object Detection using a Boosted Cascade of Simple Features’에서 제안된 효과적인 객체 검출 방법이다.</p>
+</li>
+</ol>
+<p>다수의 객체 이미지(positive /image)와 그 외의 객체가 아닌 이미지(negative /image)를 cascade함수로 트레이닝 시켜 객체 검출을 하는 머신러닝 기반의 접근 방법이다.</p>
+<p>다수의 얼굴 이미지(우리의 목표를 위해 마스크를 쓴 이미지도 필요하다)와 억룽리 없는 이미지를 classifier에 학습시켜 얼굴의 특징들을 추출해서 저장한다.</p>
+<p>학습을 시키기 이전의 <code>cv2.CascadeClassifier</code>(<code>haarcascade_frontface.xml</code>)을 사용할 경우 기존의 <code>cvlib.detect_face</code>보다 조금 더 잘찾는다.</p>
+<p>하지만 눈에 띄게 잘 찾는 것이 아니므로 마스크를 쓴 이미지로 다시 학습을 시켜봐야할 것이다.</p>
+<p><br></br></p>
+<center><img src = "/image/features.jpg"/></center>
+<center>[그림 3] cascade classifer가 학습할 feature들</center>
+
+<p><br></br></p>
+<hr>
+<ol start="2">
+<li><p>MTCNN</p>
+<p>이 딥러닝 모델을 보았을 때 굉장히 놀랐다. 예시를 한 번 보게 된다면 다음과 같다.</p>
+</li>
+</ol>
+<p><br></br></p>
+<center><img src = "/image/many.png"/></center>
+<center>[그림 4] MTCNN을 적용시켰을 때 face detection</center>
+
+<p><br></br></p>
+<p> 굉장히 작은 얼굴들도 모두 검출해내는 것을 볼 수 있다.</p>
+<p><br></br></p>
+<center><img src = "/image/structure.png"/></center>
+<center>[그림 5] MTCNN 학습 방법</center>
+
+<p><br></br></p>
+<p> 위와 같이 P-net, R-net, O-net이라는 CNN을 차례로 통과하는 Cascade모델이다.</p>
+<p><br></br></p>
+<p><a target="_blank" rel="noopener" href="https://youtu.be/w4tigQn-7Jw"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://img.youtube.com/vi/w4tigQn-7Jw/0.jpg" alt="MTCNN Process /images"></a></p>
+<center>[그림 6] MTCNN 학습 방법 영상 </center>
+<br></br>
+
+<p> 한눈에 보기 쉽게 설명해놓은 유튜브 영상이다.</p>
+<p><br></br></p>
+<h2 id="Recognize-the-Mask"><a href="#Recognize-the-Mask" class="headerlink" title="Recognize the Mask"></a>Recognize the Mask</h2><hr>
+<center><img src = "/image/fail.jpg"/></center>
+<center>[그림 7] 프로토타입</center>
+
+<p><br></br></p>
+<p> 위의 결과를 보면 알 수 있듯이 아직은 정확히 검출하지 못하는 것을 볼 수 있다.</p>
+<p>첫번째로 학습을 시켰을 때 피부가 하얀 남자나 여자들은 구분을 못시켰었는데 학습데이터가 내 얼굴이라 색도 모델이 보고있는 것인가생각하여서 다양한 인종의 사진들을 캐글에서 긁어와 학습시켰지만 여전히 구분을 못시키고 있음을 볼 수 있다.</p>
+<p>이는 아직 데이터셋의 부족으로 일어난 현상이라 생각한다.</p>
+<p>마스크를 썼다, 안썼다 두가지로만 분류하고 있었는데 tensorflow-keras로 학습을 시켰을 때 학습이 매우 잘되어 처음부터 99퍼센트의 accruacy를 보여주었었다.</p>
+<p>그리고 단 3번의 epoch만으로도 99.999에 가까운 accuracy를 보여주는 것으로 보아 좀더 노이즈가 많은 데이터를 주고 학습을 시켜야겠단 생각이 들었다.</p>
+<p><br></br></p>
+<h2 id="앞으로의-계획"><a href="#앞으로의-계획" class="headerlink" title="앞으로의 계획"></a>앞으로의 계획</h2><hr>
+<p> 딥러닝의 black-box특성을 살짝 엿볼 수 있게 하는 grad-CAM이라는 모듈을 사용해서 마스크를 잘 보고 있는지 확인해가며 학습을 시켜볼 예정이다.</p>
+<p><br></br></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://media.arxiv-vanity.com/render-output/4682170/figures/grad-cam_approach.jpg" alt="grad-cam"></p>
+<center>[그림 8] Grad-CAM의 원리</center>
+
+<p><br></br></p>
+<p> 그리고 face detection분야도 다양한 모듈을 사용하고 수정해가며 검출률을 높여보려고한다.</p>
+<p>일년동안의 프로젝트가 잘 진핻되었으면 좋겠다는 생각을 하며 글을 마치도록 하겠다.</p>
+<p><br></br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><hr>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://www.arxiv-vanity.com/papers/1611.07450/">http://www.arxiv-vanity.com/papers/1611.07450/</a></li>
+<li><a target="_blank" rel="noopener" href="https://m.blog.naver.com/PostView.nhn?blogId=dnjswns2280&amp;logNo=222028246343&amp;proxyReferer=https://www.google.com/">https://m.blog.naver.com/PostView.nhn?blogId=dnjswns2280&amp;logNo=222028246343&amp;proxyReferer=https:%2F%2Fwww.google.com%2F</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=w4tigQn-7Jw">https://www.youtube.com/watch?v=w4tigQn-7Jw</a></li>
+<li><a target="_blank" rel="noopener" href="https://yeomko.tistory.com/16">https://yeomko.tistory.com/16</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kaggle.com/prasoonkottarathil/face-mask-lite-dataset?select=with_mask">https://www.kaggle.com/prasoonkottarathil/face-mask-lite-dataset?select=with_mask</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/02/24/aais-final/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-03-15
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/WearMask/" title="WearMask">
+                        <b>#</b> WearMask
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/AAIS/" title="AAIS">
+                        <b>#</b> AAIS
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/WearMask/" title="WearMask">
+                        <b>#</b> WearMask
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Capstone/" title="Capstone">
+                        <b>#</b> Capstone
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/DeepLearning/" title="DeepLearning">
+                        <b>#</b> DeepLearning
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Capstone-Software-project"><span class="toc-text">Capstone Software project</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0%EC%97%90-%EC%95%9E%EC%84%9C"><span class="toc-text">시작하기에 앞서</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EB%A7%88%EC%8A%A4%ED%81%AC-%EC%B0%A9%EC%9A%A9-%EA%B0%90%EC%A7%80"><span class="toc-text">마스크 착용 감지?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Face-Detection"><span class="toc-text">Face Detection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Recognize-the-Mask"><span class="toc-text">Recognize the Mask</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%EC%95%9E%EC%9C%BC%EB%A1%9C%EC%9D%98-%EA%B3%84%ED%9A%8D"><span class="toc-text">앞으로의 계획</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
