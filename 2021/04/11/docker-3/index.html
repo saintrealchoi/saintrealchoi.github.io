@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[Docker] E03.docker-compose | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[Docker] E03.docker-compose</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-04-11
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Docker/" title="Docker">
+                    <b>#</b> Docker
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/docker/" title="docker">
+                    <b>#</b> docker
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/image/" title="image">
+                    <b>#</b> image
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/docker-compose/" title="docker-compose">
+                    <b>#</b> docker-compose
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Docker-Compose"><a href="#Docker-Compose" class="headerlink" title="Docker Compose"></a>Docker Compose</h1><hr>
+<br/>
+
+<blockquote>
+<p>이글은 위키북스의 <code>시작하세요! 도커/쿠버네티스</code>를 참고하여 쓴 글입니다.</p>
+</blockquote>
+<br/>
+
+<h2 id="Why-docker-compse"><a href="#Why-docker-compse" class="headerlink" title="Why docker-compse?"></a>Why docker-compse?</h2><br/>
+
+<p>도커는 일반적으로 마이크로서비스를 지향하기 때문에 한개의 컨테이너에 한개의 서비스를 제공해야 합니다. 하지만, 이를 테스트하려면 각 컨테이너를 하나씩 생성해야 합니다. 예를 들어, 웹 애플리케이션을 테스트하려면 웹 서버, 데이터베이스 컨테이너를 생성해야합니다.</p>
+<br/>
+하지만, 각 컨테이너가 제대로 동작하는지 확인하는 테스트 단계에서는 번거로운 작업입니다. 따라서, 매번 run 명령어에 옵션을 설정해 CLI로 컨테이너를 생성하기보다는 여러 개의 컨테이너를 하나의 서비스로 `COMPOSE`하여 관리할 수 있다면 좋을 것입니다.
+
+<br/>
+
+<p><strong>도커 컴포즈는 여러 개의 컨테이너의 옵션과 환경을 정의한 파일을 읽어 컨테이너를 순차적으로 생성하는 방식으로 동작합니다.</strong></p>
+<br/>
+
+<p>컨테이너의 수가 많아지고 정의해야할 옵션이 많아진다면 도커 컴포즈를 사용하는 것이 좋습니다.</p>
+<br/>
+
+
+<h2 id="Install-docker-compse"><a href="#Install-docker-compse" class="headerlink" title="Install docker-compse"></a>Install docker-compse</h2><br/>
+
+
+<p>리눅스에서는 다음 명령어로 도커 컴포즈를 설치할 수 있으며, 도커 컴포즈의 깃허브 저장소에서 직접 내려받아 설치할 수 있습니다.</p>
+<br/>
+<figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@DESKTOP-<span class="number">03</span>N08DE:/home/csj7480<span class="comment"># curl -L https://github.com/docker/compose/releases/download/1.11.0/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line"><span class="number">100</span>   <span class="number">633</span>    <span class="number">0</span>   <span class="number">633</span>    <span class="number">0</span>     <span class="number">0</span>   <span class="number">2082</span>      <span class="number">0</span> --:--:-- --:--:-- --:--:--  <span class="number">2082</span></span><br><span class="line"><span class="number">100</span> <span class="number">8052</span>k  <span class="number">100</span> <span class="number">8052</span>k    <span class="number">0</span>     <span class="number">0</span>  <span class="number">6022</span>k      <span class="number">0</span>  <span class="number">0</span>:<span class="number">00</span>:<span class="number">01</span>  <span class="number">0</span>:<span class="number">00</span>:<span class="number">01</span> --:--:-- <span class="number">14.8</span>M</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<p>윈도우에서는 Docker for Windows를 설치하면 같이 설치됩니다.</p>
+<br/>
+
+<h2 id="Use-docker-compose"><a href="#Use-docker-compose" class="headerlink" title="Use docker-compose"></a>Use docker-compose</h2><br/>
+
+<h3 id="Basic-Usage-of-docker-compose"><a href="#Basic-Usage-of-docker-compose" class="headerlink" title="Basic Usage of docker-compose"></a>Basic Usage of docker-compose</h3><br/>
+도커 컴포즈는 컨테이너의 설정이 정의된 YAML 파일을 읽어 도커 엔진을 통해 컨테이너를 생성합니다. 따라서, 가장 먼저 작성해야할 것은 YAML파일 입니다.
+
+
+<br/>
+
+<blockquote>
+<p>YAML(Yet Another Markup Language)이란?</p>
+<ul>
+<li>XML, JSON과 같은 파일포맷형식으로 사람이 읽을 수 있는 데이터 직렬화 언어입니다. 밑의 예시에서도 살펴볼 수 있듯이 기존의 XML, JSON보다 읽기 쉬운 형식입니다.</li>
+</ul>
+</blockquote>
+<br/>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="https://media.vlpt.us/images/bloomspes/post/311cdc87-8c5e-467f-aa06-bb2e5174d4fe/image.png"></p>
+<center>출처 : SpesDevTech.log</center>
+
+<br/>
+
+
+<p>우선, 다음과 같은 run 명령어를 docker-compose.yml 파일로 변환해 컨테이너를 생성하고 실행해보겠습니다.</p>
+<br/>
+
+<ul>
+<li>데이터베이스 컨테이너</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">csj7480@DESKTOP-03N08DE:~$ docker run -d --name mysql \</span><br><span class="line">&gt; alicek106&#x2F;composetest:mysql \</span><br><span class="line">&gt; mysqld</span><br></pre></td></tr></table></figure>
+<br/>
+- 웹 서버 컨테이너
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">csj7480@DESKTOP-03N08DE:~$ docker run -d -p 80:80 \</span><br><span class="line">&gt; --link mysql:db --name web \</span><br><span class="line">&gt; alicek106&#x2F;composetest:web \</span><br><span class="line">&gt; apachectl -DFOREGROUND</span><br></pre></td></tr></table></figure>
+<br/>
+- docker-compose.yml
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version :</span> <span class="string">&#x27;3.0&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">web:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">alicek106/composetest:web</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;80:80&quot;</span></span><br><span class="line">    <span class="attr">links:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">mysql:db</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">apachectl</span> <span class="string">-DFOREGROUND</span></span><br><span class="line">  <span class="attr">mysql:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">alicek106/composetest:mysql</span></span><br><span class="line">    <span class="attr">command:</span> <span class="string">mysqld</span></span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<blockquote>
+<p>이때 중요한 것은 YAML 파일에서 들여쓰기는 tab(4칸)이 아닌 **2개의 공백(space)**로 구분해야 합니다.</p>
+</blockquote>
+<br/>
+도커 컴포즈는 현재 디렉터리의 docker-compose.yml 파일을 읽어 로컬의 도커 엔진에게 컨테이너 생성을 요청합니다. 
+
+<br/>
+`docker-compose up -d`명령어로 컨테이너를 생성해보겠습니다.
+
+<br/>
+
+
+<p><code>docker-compose.yml </code>파일에 대한 설명은 다음과 같습니다.</p>
+<br/>
+1. `version` : YAML 파일 포맷의 버전을 의미합니다. 버전은 `1`,`2`,`2.1`,`3.0` 등이 있습니다. `도커 컴포즈 1.8`은 `버전 2`를 `도커 컴포즈 1.9`는 `버전 2.1`을, `도커 컴포즈 1.10`은 `버전 3.0`을 사용합니다.
+2. `services`: 생성될 컨테이너를 묶어놓은 단위입니다.
+3. `web`, `mysql` : 생성될 서비스의 이름입니다. `docker run`에서 사용하는 옵션과 동일하게 `image`, `ports`, `links`, `command` 등을 정의할 수 있습니다.
+
+<br/>
+`docker ps`명령어로 확인하면 다음과 같습니다.
+
+<br/>
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="image%5Cdockercompose.jpg" alt="dockercompose"></p>
+<center>docker container</center>
+
+
+<br/>
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="image%5Cdocker_desktop.jpg" alt="docker_desktop"></p>
+<center>Docker desktop </center>
+
+<br/>
+도커 컴포즈는 컨테이너를 프로젝트 및 서비스 단위로 구분하므로 컨테이너의 이름은 일반적으로 다음과 같은 형식으로 정해집니다.
+
+<br/>
+`[프로젝트 이름]_[서비스 이름]_[서비스 내에서 컨테이너의 번호]`
+
+<br/>
+위 예제에서 생성한 프로젝트의 이름은 csj7480,서비스 이름은 mywql, web입니다. 프로젝트의 이름을 별도로 입력하지는 않았지만 `docker-compose.yml` 파일이 위치한 디렉터리의 이름을 프로젝트 이름으로 사용합니다. 프로젝트의 이름은 디렉터리의 이름에 따라 다를 것입니다.  
+
+<br/>
+
+
+<p>하지만, <code>-p</code>옵션을 통해 프로젝트의 이름을 지정할 수도 있습니다. 또한, 기본적으로 현재 디렉토리의 <code>docker-compose.yml</code>파일을 사용하지만 <code>-f</code>옵션을 통해 파일의 위치도 지정할 수 있습니다.</p>
+<br/>
+
+<p>또한, <code>docker-compose scale</code>명령어로 csj7480_mysql_2를 생성할 수 있습니다.</p>
+<br/>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose scale mysql&#x3D;2</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="image%5Cdockercompose2.jpg" alt="dockercompose2"></p>
+<br/>
+
+<p>단, <code>docker-compose up  -d mysql</code>과 같이 <code>docker-compose.yml</code>파일에 명시된 특정 서비스의 컨테이너만 생성할 수 있습니다.</p>
+<br/>
+
+<p>또한, 생성된 프로젝트는 <code>docker-compose down</code>명령어로 삭제할 수도 있습니다. 프로젝트를 삭제하면 <strong>서비스의 컨테이너 또한 전부 정지된 뒤 삭제됩니다.</strong></p>
+<br/>
+
+<hr>
+<br/>
+
+<h2 id="Application-of-docker-compose"><a href="#Application-of-docker-compose" class="headerlink" title="Application of docker-compose"></a>Application of docker-compose</h2><br/>
+
+<p>도커 컴포즈를 실제 개발환경에서 사용하려면 더 많은 옵션과 명령어가 필요합니다. 이번 챕터에서는 이에 대해서 알아보겠습니다.</p>
+<br/>
+
+<p><strong>YAML 파일 작성</strong></p>
+<br/>
+YAML 파일은 크게 버전, **서비스**, 볼륨, 네트워크 정의의 4가지 항목으로 구성됩니다. 이 중 **서비스** 정의를 가장 많이 사용하며, 볼륨과 네트워크 정의는 서비스로 생성된 컨테이너에 선택적으로 사용됩니다.
+
+
+<br/>
+
+<hr>
+<br/>
+
+
+<ol>
+<li><strong>version</strong> 정의</li>
+</ol>
+<p>도커 컴포즈 버전 1.10에서 사용할 수 있는 <strong>버전 3</strong>를 기준으로 합니다. 버전 항목은 일반적으로 YAML파일의 맨 윗부분에 명시합니다.</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&#x27;3.0&#x27;</span></span><br></pre></td></tr></table></figure>
+
+
+<br/>
+---
+
+
+<br/>
+
+<ol start="2">
+<li><strong>services</strong> 정의</li>
+</ol>
+<p>서비스는 도커 컴포즈로 생성할 컨테이너 옵션을 정의합니다. 각 서비스는 컨테이너로 구현됩니다. 서비스의 이름은 services의 하위 항목으로 정의하고, 컨테이너의 옵션은 서비스 이름의 하위 항목에 정의합니다.</p>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  my_container_1:</span><br><span class="line">    image: -</span><br><span class="line">  my_container_2:</span><br><span class="line">    image: -</span><br></pre></td></tr></table></figure>
+<br/>
+서비스 항목이 가질 수 있는 주요 컨테이너 옵션만 설명하겠습니다.
+
+
+<br/>
+
+<ul>
+<li><strong>image</strong>: 이미지의 이름을 설정합니다. 이미지 이름 포맷은 <code>docker run</code>과 같습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  my_container_1:</span><br><span class="line">    image: csj7480/composetest:mysql</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<ul>
+<li><strong>links</strong>: <code>docker run --link</code>와 같으며, 다른 서비스에 서비스명만으로 접근할 수 있도록 설정합니다. [SERVICE:ALIAS]형식으로 별칭을 지정할 수 있습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480/composetest:web</span><br><span class="line">    links:</span><br><span class="line">      - db</span><br><span class="line">      - db:database</span><br><span class="line">      - redis</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<ul>
+<li><strong>environment</strong>: <code>docker run --env, -e</code> 와 같습니다. 딕셔너리나 배열 형태로 사용할 수 있습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480/composetest:web</span><br><span class="line">    links:</span><br><span class="line">      - db</span><br><span class="line">      - db:database</span><br><span class="line">      - redis</span><br><span class="line">    environment:</span><br><span class="line">      - MYSQL_ROOT_PASSWORD=<span class="number">0000</span></span><br><span class="line">      - MYSQL_DATABASE_NAME=mydb</span><br><span class="line">      또는</span><br><span class="line">      MYSQL_ROOT_PASSWORD:<span class="number">0000</span></span><br><span class="line">      MYSQL_DATABASE_NAME:mydb</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<ul>
+<li><strong>command</strong>: 컨테이너가 실행될 때 수행할 명령어를 설정하며, <code>docker run</code>의 마지막에 붙는 커맨드와 같습니다. Dockerfile의 RUN과 같은 배열 형태로도 사용할 수 있습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480/composetest:web</span><br><span class="line">    links:</span><br><span class="line">      - db</span><br><span class="line">      - db:database</span><br><span class="line">      - redis</span><br><span class="line">    environment:</span><br><span class="line">      - MYSQL_ROOT_PASSWORD=<span class="number">0000</span></span><br><span class="line">      - MYSQL_DATABASE_NAME=mydb</span><br><span class="line">    command: apachectl -DFOREGROUND</span><br><span class="line">    		또는</span><br><span class="line">    command: [apachectl, -DFOREGROUND]</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<ul>
+<li><strong>depends_on</strong> : 특정 컨테이너에 대한 의존 관계를 나타내며, <strong>이 항목에 명시된 컨테이너가 먼저 생성되고 실행됩니다.</strong> 다음 예제에서는 web 컨테이너보다 mysql 컨테이너가 먼저 생성됩니다. <strong>links</strong>와 달리 <strong>depends_on</strong>은 서비스 이름으로만 접근할 수 있습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480/composetest:web</span><br><span class="line">    links:</span><br><span class="line">      - db</span><br><span class="line">      - db:database</span><br><span class="line">      - redis</span><br><span class="line">    environment:</span><br><span class="line">      - MYSQL_ROOT_PASSWORD=<span class="number">0000</span></span><br><span class="line">      - MYSQL_DATABASE_NAME=mydb</span><br><span class="line">    command: apachectl -DFOREGROUND</span><br><span class="line">    depends_on</span><br><span class="line">     - mysql</span><br><span class="line">  mysql:</span><br><span class="line">    image: csj7480/composetest:mysql</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<blockquote>
+<p>이 때 주의해야할 점은 실행 순서만 정의할 뿐 컨테이너 내부의 애플리케이션이 준비된 상태인지에 대해서는 확인하지 않습니다. 따라서, 컨테이너에 셸 스크립트를 entrypoint로 지정하는 방법이 있습니다.</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">web:</span><br><span class="line"> ...</span><br><span class="line"> <span class="keyword">entrypoint</span><span class="bash">: ./sync_scripts.sh mysql:3306</span></span><br></pre></td></tr></table></figure>
+
+<p>entrypoint에 지정된 <code>sync_scripts.sh</code>은 다음과 같습니다.</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">until (상태를 확인); do</span><br><span class="line">echo &quot;depend container is not available yet&quot;</span><br><span class="line">sleep 1</span><br><span class="line">done</span><br><span class="line">echo &quot;depends_on container is ready&quot;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<br/>
+
+<ul>
+<li><strong>ports</strong>: <code>docker run -p</code>와 같으며 서비스의 컨테이너를 개방할 포트를 설정합니다. 그러나 단일 호스트 환경에서 80:80과 같이 호스트의 특정포트를 서비스의 컨테이너에 연결하면 <code>docker-compose scale</code>명령어로 서비스의 컨테이너의 수를 늘릴 수 없습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480/composetest:web</span><br><span class="line">      ports:</span><br><span class="line">        - <span class="string">&quot;8080&quot;</span></span><br><span class="line">        - <span class="string">&quot;8081-8085&quot;</span></span><br><span class="line">        - ...</span><br><span class="line">    links:</span><br><span class="line">      - db</span><br><span class="line">      - db:database</span><br><span class="line">      - redis</span><br><span class="line">    environment:</span><br><span class="line">      - MYSQL_ROOT_PASSWORD=<span class="number">0000</span></span><br><span class="line">      - MYSQL_DATABASE_NAME=mydb</span><br><span class="line">    command: apachectl -DFOREGROUND</span><br><span class="line">    depends_on</span><br><span class="line">     - mysql</span><br><span class="line">    </span><br><span class="line">  mysql:</span><br><span class="line">    image: csj7480/composetest:mysql</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<ul>
+<li><strong>build</strong>: build 항목에 정의된 도커파일에서 이미지를 빌드해 서비스의 컨테이너를 생성하도록 설정합니다. 또한 도커파일에 사용될 컨텍스트나 도커파일의 이름, 도커파일에서 사용될 인자 값을 설정할 수 있습니다.</li>
+</ul>
+<br/>
+
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    build: ./composetest</span><br><span class="line">    context: ./composetest</span><br><span class="line">    dockerfile : myDockerFile</span><br><span class="line">    args:</span><br><span class="line">      HOST_NAME:web</span><br><span class="line">      HOST_CONFIG: self_config</span><br><span class="line">    image: csj7480/composetest:web</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<ul>
+<li><strong>extends</strong>: 현재 혹은 다른 <code>YAML</code>파일에서 서비스 속성을 상속받게 설정합니다. 다음과 같은 예시를 들어보겠습니다.</li>
+</ul>
+<br/>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">version:<span class="string">&#x27;3.0&#x27;</span></span><br><span class="line">    services:</span><br><span class="line">      web:</span><br><span class="line">        extends:</span><br><span class="line">          file: extend_compose.yml</span><br><span class="line">          service: extend_web</span><br></pre></td></tr></table></figure>
+<center>docker-compose.yml</center>
+
+
+<br/>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">version:&#39;3.0&#39;</span><br><span class="line">  services:</span><br><span class="line">    extend_web:</span><br><span class="line">    image: ubuntu:14.04</span><br><span class="line">    ports:</span><br><span class="line">      - &quot;80:80&quot;</span><br></pre></td></tr></table></figure>
+<center>extend-compose.yml</center>
+
+
+<br/>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">version:&#39;3.0&#39;</span><br><span class="line">  services:</span><br><span class="line">    web:</span><br><span class="line">      extends:</span><br><span class="line">        service: extend-web</span><br><span class="line">    extend_web:</span><br><span class="line">      image: ubuntu:14.04</span><br><span class="line">      ports:</span><br><span class="line">       - &quot;80:80&quot;</span><br></pre></td></tr></table></figure>
+<center>상속받은 결과물</center>
+
+
+<br/>
+
+<blockquote>
+<p>단, <code>depends_on</code>, <code>links</code>,<code>volumes_from</code>과 같은 항목들은 컨테이너 사이의 의존성을 내포하므로 <code>extends</code>로 상속받을 수 없습니다.</p>
+</blockquote>
+<br/>
+
+<hr>
+<br/>
+
+<ol start="3">
+<li><strong>network</strong> 정의</li>
+</ol>
+<br/>
+
+<ul>
+<li><strong>driver</strong>: 기본적으로 <strong>브리지</strong>타입의 네트워크를 생성하는데 다른 네트워크를 사용할 수 있도록 설정할 수 있습니다. 드라이버에 필요한 옵션은 하위 항목인 <code>driver_ops</code>로 전달합니다.</li>
+</ul>
+<br/>
+
+<ul>
+<li><strong>ipam</strong>: IPAM(IP Address Manager)를 위해 사용할 수 있는 옵션으로 subnet, ip 범위 등을 설정할 수 있습니다. 이 때 <code>driver</code>항목에는 IPAM을 지원하는 드라이버의 이름을 입력합니다.</li>
+</ul>
+<br/>
+- **external**: `YAML`파일을 통해 프로젝트를 생성할 때마다 네트워크를 생성하는 것이 아니라 기존의 네트워크를 사용하도록 설정합니다. 사용하려는 외부 네트워크의 이름을 하위 항목으로 입력한 뒤 `external`의 값을 `true`로 설정합니다. 이 때, `external`은 다른 네트워크의 옵션을 사용하므로 `driver`,`driver_ops`,`ipams` 옵션과 함께 사용할 수 없습니다.
+
+
+<br/>
+
+<hr>
+<br/>
+
+<ol start="4">
+<li><strong>volume</strong> 정의</li>
+</ol>
+<br/>
+
+<ul>
+<li><strong>driver</strong>: 볼륨을 생성할 때 사용될 드라이버를 설정합니다. default값으로는 local로 설정되며 사용하는 드라이버에 따라 변경해야 합니다. 추가 옵션은 하위 항목인 <code>driver_opts</code>를 통해 인자를 넘겨줍니다.</li>
+</ul>
+<br/>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">version:&#39;3.0&#39;</span><br><span class="line">services:</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">volumes:</span><br><span class="line">  driver: flocker</span><br><span class="line">    driver_opts:</span><br><span class="line">      opt: &quot;1&quot;</span><br><span class="line">      opt2: 2</span><br></pre></td></tr></table></figure>
+
+<br/>
+
+<ul>
+<li><strong>external</strong>: <code>volume</code>,<code>volumes-from</code> 옵션 등을 사용하면 프로젝트마다 볼륨을 생성합니다. 이 때 <code>external</code>옵션을 설정하면 볼륨을 프로젝트를 생성할 때마다 매번 생성하지 않고 기존 볼륨을 사용하도록 설정합니다.</li>
+</ul>
+<br/>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">version:&#39;3.0&#39;</span><br><span class="line">services:</span><br><span class="line">  web:</span><br><span class="line">    image: csj7480&#x2F;composetest:web</span><br><span class="line">    volumes:</span><br><span class="line">      - myvolume:&#x2F;var&#x2F;www&#x2F;html</span><br><span class="line">volumes:</span><br><span class="line">  myvolume:</span><br><span class="line">    external: true</span><br></pre></td></tr></table></figure>
+<br/>
+위와 같은 예제는 `myvolume`이라는 이름의 외부 볼륨을 web 서비스의 컨테이너에 마운트합니다.
+
+
+
+<br/>
+
+
+<hr>
+<br/>
+
+<br/>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><br/>
+> `시작하세요! 도커/쿠버네티스: 친절한 설명으로 쉽게 이해하는 컨테이너 관리` - 용찬호
+
+
+
+
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/04/09/docker-2/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-04-11
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/Docker/" title="Docker">
+                        <b>#</b> Docker
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/docker/" title="docker">
+                        <b>#</b> docker
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/image/" title="image">
+                        <b>#</b> image
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/docker-compose/" title="docker-compose">
+                        <b>#</b> docker-compose
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-Compose"><span class="toc-text">Docker Compose</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Why-docker-compse"><span class="toc-text">Why docker-compse?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install-docker-compse"><span class="toc-text">Install docker-compse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-docker-compose"><span class="toc-text">Use docker-compose</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Basic-Usage-of-docker-compose"><span class="toc-text">Basic Usage of docker-compose</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Application-of-docker-compose"><span class="toc-text">Application of docker-compose</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
