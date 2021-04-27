@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[SpringBoot] E01.Start SpringBoot! | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[SpringBoot] E01.Start SpringBoot!</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-04-27
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/SpringBoot/" title="SpringBoot">
+                    <b>#</b> SpringBoot
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/SpringBoot/" title="SpringBoot">
+                    <b>#</b> SpringBoot
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/JPA/" title="JPA">
+                    <b>#</b> JPA
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Java/" title="Java">
+                    <b>#</b> Java
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Annotation/" title="Annotation">
+                    <b>#</b> Annotation
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Start-Spring-Boot"><a href="#Start-Spring-Boot" class="headerlink" title="Start Spring Boot!"></a>Start Spring Boot!</h1></br>
+
+
+
+<blockquote>
+<p>이 글은 <code>스프링부트와 AWS로 혼자 구현하는 웹 서비스</code>라는 책을 참고하여 작성한 글입니다.</p>
+</blockquote>
+</br>
+
+
+
+<hr>
+<h2 id="build-gradle"><a href="#build-gradle" class="headerlink" title="build.gradle"></a>build.gradle</h2></br>
+
+<p>매번 자바로 프로그래밍할 때 봤던 파일이지만, 자주 열지도 않고 건들일 일이 거의 없었던 파일입니다. 안드로이드 앱을 만들때도 잠깐 만졌던 기억이 있지만 어디까지나 복붙의 과정이었을 뿐 제대로 살펴본 적이 없는데 이에 대해 한번 살펴보도록 하겠습니다.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">buildscript&#123;</span><br><span class="line">    ext&#123;</span><br><span class="line">        springBootVersion = <span class="string">&#x27;2.1.7.RELEASE&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    repositories&#123;</span><br><span class="line">        mavenCentral()</span><br><span class="line">        jcenter()</span><br><span class="line">    &#125;</span><br><span class="line">    dependencies&#123;</span><br><span class="line">        classpath(<span class="string">&quot;org.springframework.boot:spring-boot-gradle-plugin:$&#123;springBootVersion&#125;&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</br>
+
+
+
+<ul>
+<li><code>ext</code> : build.gradle에서 사용하는 <strong>전역변수</strong>를 설정</li>
+</ul>
+</br>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">apply plugin: <span class="string">&#x27;java&#x27;</span></span><br><span class="line">apply plugin: <span class="string">&#x27;eclipse&#x27;</span></span><br><span class="line">apply plugin: <span class="string">&#x27;org.springframework.boot&#x27;</span></span><br><span class="line">apply plugin: <span class="string">&#x27;io.spring.dependency-management&#x27;</span></span><br></pre></td></tr></table></figure>
+</br>
+
+<p>책에서는 위와같이 plugin들을 설정을 했는데 위의 plugin들은 필수 플러그인들이므로 항상 추가하면 된다고 했습니다.</p>
+<p>하지만, 형태를 보고 의아했는데 맨처음 default값으로 plugin들은 <code>plugins&#123; id &#39;java&#39;&#125;</code>와 같이 설정되어 있어 차이가 무엇인가 궁금하여 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/32352816/what-the-difference-in-applying-gradle-plugin">스택오버플로우</a>에서 검색해본 결과 다음과 같이 사용은 한다고 합니다.</p>
+</br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;java&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;eclipse&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;org.springframework.boot&#x27;</span> version <span class="string">&#x27;2.1.7.RELEASE&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;io.spring.dependency-management&#x27;</span> version <span class="string">&#x27;1.0.9.RELEASE&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</br>
+
+<p>하지만,  ‘DSL (<code>plugins &#123;...&#125;</code>) does not work for your private plugins or company plugins which are not published to the official Gradle plugin repo’라고 하고 apply plugin을 아직 쓴다고 하기 때문에 위의 예시로 사용하겠습니다.</p>
+</br>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">repositories&#123;</span><br><span class="line">    mavenCentral()</span><br><span class="line">    jcenter()</span><br><span class="line">&#125;</span><br><span class="line">dependencies &#123;</span><br><span class="line">    compile(<span class="string">&#x27;org.springframework.boot:spring-boot-starter-web&#x27;</span>)</span><br><span class="line">    testCompile(<span class="string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</br>
+
+<ul>
+<li><code>repositories</code> : 각종 의존성(라이브러리)들을 어떤 remote-repository(원격저장소)에서 받을지를 결정합니다. default값이기도하고 기본적으로 mavenCentral을 많이 사용하지만, 최근에는 라이브러리 업로드 난이도 때문에 jcenter도 많이 사용한다고 합니다. 이는 추후에 직접와닿으면 다시 한번 살펴보겠습니다.</li>
+<li><code>dependencies</code> : 프로젝트 개발에 필요한 의존성들을 선언하는 곳입니다.  이 때, <code>compile</code>메서드 안에 라이브러리의 이름의 앞부분만 추가한 뒤 자동완성(<strong>CTRL+SPACE</strong>)을 사용하면 좋습니다. 단, <strong>version 명</strong>은 명시하지 않습니다. 그래야 위의 <code>buildscript</code>부분의 dependencies에서의 버젼에 따라갑니다.</li>
+</ul>
+</br>
+
+
+
+<hr>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2></br>
+
+
+
+<p>SpringBoot 프로젝트를 진행하기에 앞서 깃허브와 연동해보도록 하겠습니다. Jetbrain의 IDEA를 깔다보면 매번 연동된다는 사실을 인지하고 있었지만 한 번도 해본적이 없었습니다. 하지만, 이번에 그 <del>위대한</del>첫걸음을 한번 떼보겠습니다.</p>
+</br>
+
+<p>윈도우 환경에서 [CTRL+SHIFT+A]를 통해 Action 검색창을 열어 <code>share project on github</code>를 검색해봅니다.</p>
+<p>그 후 깃허브 로그인을 하는데</p>
+<p><code>invalid authentication data.404 not found</code>가 출력되는 것입니다..!</p>
+<p>구글링을 해본 결과 다음의 <a target="_blank" rel="noopener" href="https://zluoy.tistory.com/77">링크</a>에서 token login을 하는 방법으로 로그인 해보았습니다. </p>
+</br>
+
+<p><strong>주의할점</strong>  : 흥분한 나머지 모든 파일을 모두 commit하였지만 <code>.idea</code> 디렉터리는 commit에서 제외시켜야 합니다. 인텔리제이에서 프로젝트 실행시 자동으로 생성되는 파일들이기 때문에 깃허브에 올리는 것이 불필요합니다.</p>
+</br>
+
+<p>따라서, 앞으로 <code>.idea</code> 디렉터리를 커밋 대상에서 제외하기 위해 <code>.gitignore</code>파일을 통해 <code>.idea</code>디렉터리를 제외하도록 하겠습니다.</p>
+</br>
+
+
+
+<hr>
+<h2 id="Test-Code"><a href="#Test-Code" class="headerlink" title="Test Code"></a>Test Code</h2></br>
+
+</br>
+
+<p><code>백기선</code>님의 자바스터디를 하면서 가장 많이 보고 하고싶었던 JUnit을 통한 단위테스트입니다. 서비스의 모든 기능을 테스트 하기에는 자원이 너무 부족하기 때문에 새로운 기능이 추가될 때, 기존의 기능이 잘 작동되는 것을 보장해주는 것이 테스트코드입니다.</p>
+<p>이를 마친 후 TDD에 대해 알아보겠습니다.</p>
+</br>
+
+
+
+<p>롬복을 통해 어노테이션을 생성하려 했는데 막상 플러그인을 설치하고나서 많은 오류가 발생했습니다. 실행이 되지 않는 경우는 다음과 같습니다.</p>
+</br>
+
+<blockquote>
+<ol>
+<li><p>Gradle version downgrade </p>
+<p>11p에 그레이들과 JDK버젼이 명시되어 있었지만 성격급한 저는 읽고 바로 스킵한 덕에 오류가 났습니다. 기본적으로 인텔리제이에서 그레이들 버젼 5를 사용하고 있는데 이 <a target="_blank" rel="noopener" href="https://github.com/jojoldu/freelec-springboot2-webservice/issues/2">링크</a>에서 다운그레이드를 하면 해결됩니다. </p>
+</li>
+<li><p>Enable Annotation processing</p>
+<p>70p에 롬복을 설치한 후 옵션을 활성화하라고 했지만 정독하지않는 저는.. 이번에도 지나치고 말았습니다. [Setting - Build, Execution, Deployment - Compiler - Annotation Processors] 메뉴에서 확인할 수 있습니다.</p>
+</li>
+<li><p>Build and Run</p>
+<p>[Setting - Build, Execution, Deployment - Build Tools - Gradle]에서 <code>Build and run using</code> 옵션과 <code>Run test using</code>옵션을 IntelliJ IDEA로 옵션을 바꾸면 해결되는 문제였습니다. </p>
+</li>
+</ol>
+</blockquote>
+</br>
+
+
+
+<hr>
+<h2 id="Annotation"><a href="#Annotation" class="headerlink" title="Annotation"></a>Annotation</h2><br/>
+
+
+
+<p>책에 소개되어 있는 Annotation에 대해서 간단히 살펴보겠습니다.</p>
+<br/>
+
+<ol>
+<li><p><code>@Getter</code></p>
+<ul>
+<li>선언된 모든 필드의 get method를 생성해줍니다.</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p><code>@RequiredArgsConstructor</code></p>
+<ul>
+<li><p>선언된 모든 final 필드가 포함된 생성자를 생성해줍니다.</p>
+</li>
+<li><p>final이 없는 필드는 생성자에 포함되지 않습니다.</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="3">
+<li><p><code>@AssertThat</code></p>
+<ul>
+<li><p>assertj라는 테스트 검증 라이브러리의 검증 메서드입니다.</p>
+</li>
+<li><p>검증하고 싶은 대상을 메서드 인자로 받습니다.</p>
+</li>
+<li><p>** 메서드 체이닝**이 지원되어 isEqulTo와 같은 메서드를 이어서 사용할 수 있습니다.</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="4">
+<li><p><code>@isEqualTo</code></p>
+<ul>
+<li><p>assertj의 동등 비교 메서드입니다.</p>
+</li>
+<li><p><code>assertThat</code>과 <code>isEqualTo</code>의 값을 비교해서 같을 때만 성공입니다.</p>
+</li>
+</ul>
+<blockquote>
+<p><code>Junit</code>에 <code>assertThat</code>과 다른 메서드입니다. assertj의 장점은 <a target="_blank" rel="noopener" href="http://bit.ly/30vm9Lg">링크</a>에서 확인할 수 있습니다. 다음에 확인해보도록 하겠습니다.</p>
+</blockquote>
+</li>
+</ol>
+<ol start="5">
+<li><p><code>@RequestParam</code></p>
+<ul>
+<li>외부에서 API로 넘긴 파라미터를 가져오는 어노테이션입니다.</li>
+</ul>
+</li>
+</ol>
+<br/>
+
+
+
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><blockquote>
+<p><code>스프링 부트와 AWS로 혼자 구현하는 웹 서비스</code> - 이동욱</p>
+</blockquote>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/04/11/docker-3/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-04-27
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/SpringBoot/" title="SpringBoot">
+                        <b>#</b> SpringBoot
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/SpringBoot/" title="SpringBoot">
+                        <b>#</b> SpringBoot
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/JPA/" title="JPA">
+                        <b>#</b> JPA
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Java/" title="Java">
+                        <b>#</b> Java
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Annotation/" title="Annotation">
+                        <b>#</b> Annotation
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Start-Spring-Boot"><span class="toc-text">Start Spring Boot!</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#build-gradle"><span class="toc-text">build.gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Github"><span class="toc-text">Github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Test-Code"><span class="toc-text">Test Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Annotation"><span class="toc-text">Annotation</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
