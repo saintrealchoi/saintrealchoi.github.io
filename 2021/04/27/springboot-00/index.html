@@ -160,6 +160,7 @@
 
 
 
+<hr>
 <h2 id="build-gradle"><a href="#build-gradle" class="headerlink" title="build.gradle"></a>build.gradle</h2></br>
 
 <p>매번 자바로 프로그래밍할 때 봤던 파일이지만, 자주 열지도 않고 건들일 일이 거의 없었던 파일입니다. 안드로이드 앱을 만들때도 잠깐 만졌던 기억이 있지만 어디까지나 복붙의 과정이었을 뿐 제대로 살펴본 적이 없는데 이에 대해 한번 살펴보도록 하겠습니다.</p>
@@ -199,7 +200,14 @@
 </ul>
 </br>
 
-<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2><p>SpringBoot 프로젝트를 진행하기에 앞서 깃허브와 연동해보도록 하겠습니다. Jetbrain의 IDEA를 깔다보면 매번 연동된다는 사실을 인지하고 있었지만 한 번도 해본적이 없었습니다. 하지만, 이번에 그 <del>위대한</del>첫걸음을 한번 떼보겠습니다.</p>
+
+
+<hr>
+<h2 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h2></br>
+
+
+
+<p>SpringBoot 프로젝트를 진행하기에 앞서 깃허브와 연동해보도록 하겠습니다. Jetbrain의 IDEA를 깔다보면 매번 연동된다는 사실을 인지하고 있었지만 한 번도 해본적이 없었습니다. 하지만, 이번에 그 <del>위대한</del>첫걸음을 한번 떼보겠습니다.</p>
 </br>
 
 <p>윈도우 환경에서 [CTRL+SHIFT+A]를 통해 Action 검색창을 열어 <code>share project on github</code>를 검색해봅니다.</p>
@@ -214,17 +222,104 @@
 <p>따라서, 앞으로 <code>.idea</code> 디렉터리를 커밋 대상에서 제외하기 위해 <code>.gitignore</code>파일을 통해 <code>.idea</code>디렉터리를 제외하도록 하겠습니다.</p>
 </br>
 
-<h2 id="JUnit"><a href="#JUnit" class="headerlink" title="JUnit"></a>JUnit</h2></br>
 
-<p><code>백기선</code>님의 자바스터디를 하면서 가장 많이 보고 하고싶었던 JUnit을 통한 단위테스트입니다. 서비스의 모든 기능을 테스트 하기에는 자원이 너무 부족하기 때문에 새로운 기능이 추가될 때, 기존의 기능이 잘 작동되는 것을 보장해주는 것이 테스크코드입니다.</p>
+
+<hr>
+<h2 id="Test-Code"><a href="#Test-Code" class="headerlink" title="Test Code"></a>Test Code</h2></br>
+
+</br>
+
+<p><code>백기선</code>님의 자바스터디를 하면서 가장 많이 보고 하고싶었던 JUnit을 통한 단위테스트입니다. 서비스의 모든 기능을 테스트 하기에는 자원이 너무 부족하기 때문에 새로운 기능이 추가될 때, 기존의 기능이 잘 작동되는 것을 보장해주는 것이 테스트코드입니다.</p>
 <p>이를 마친 후 TDD에 대해 알아보겠습니다.</p>
 </br>
 
+
+
+<p>롬복을 통해 어노테이션을 생성하려 했는데 막상 플러그인을 설치하고나서 많은 오류가 발생했습니다. 실행이 되지 않는 경우는 다음과 같습니다.</p>
+</br>
+
+<blockquote>
 <ol>
-<li>그레이들 버전 다운그레이드</li>
-<li>Enable annotation processing</li>
-<li>Build and Run : Gradle -&gt; IntelliJ</li>
+<li><p>Gradle version downgrade </p>
+<p>11p에 그레이들과 JDK버젼이 명시되어 있었지만 성격급한 저는 읽고 바로 스킵한 덕에 오류가 났습니다. 기본적으로 인텔리제이에서 그레이들 버젼 5를 사용하고 있는데 이 <a target="_blank" rel="noopener" href="https://github.com/jojoldu/freelec-springboot2-webservice/issues/2">링크</a>에서 다운그레이드를 하면 해결됩니다. </p>
+</li>
+<li><p>Enable Annotation processing</p>
+<p>70p에 롬복을 설치한 후 옵션을 활성화하라고 했지만 정독하지않는 저는.. 이번에도 지나치고 말았습니다. [Setting - Build, Execution, Deployment - Compiler - Annotation Processors] 메뉴에서 확인할 수 있습니다.</p>
+</li>
+<li><p>Build and Run</p>
+<p>[Setting - Build, Execution, Deployment - Build Tools - Gradle]에서 <code>Build and run using</code> 옵션과 <code>Run test using</code>옵션을 IntelliJ IDEA로 옵션을 바꾸면 해결되는 문제였습니다. </p>
+</li>
 </ol>
+</blockquote>
+</br>
+
+
+
+<hr>
+<h2 id="Annotation"><a href="#Annotation" class="headerlink" title="Annotation"></a>Annotation</h2><br/>
+
+
+
+<p>책에 소개되어 있는 Annotation에 대해서 간단히 살펴보겠습니다.</p>
+<br/>
+
+<ol>
+<li><p><code>@Getter</code></p>
+<ul>
+<li>선언된 모든 필드의 get method를 생성해줍니다.</li>
+</ul>
+</li>
+</ol>
+<ol start="2">
+<li><p><code>@RequiredArgsConstructor</code></p>
+<ul>
+<li><p>선언된 모든 final 필드가 포함된 생성자를 생성해줍니다.</p>
+</li>
+<li><p>final이 없는 필드는 생성자에 포함되지 않습니다.</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="3">
+<li><p><code>@AssertThat</code></p>
+<ul>
+<li><p>assertj라는 테스트 검증 라이브러리의 검증 메서드입니다.</p>
+</li>
+<li><p>검증하고 싶은 대상을 메서드 인자로 받습니다.</p>
+</li>
+<li><p>** 메서드 체이닝**이 지원되어 isEqulTo와 같은 메서드를 이어서 사용할 수 있습니다.</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol start="4">
+<li><p><code>@isEqualTo</code></p>
+<ul>
+<li><p>assertj의 동등 비교 메서드입니다.</p>
+</li>
+<li><p><code>assertThat</code>과 <code>isEqualTo</code>의 값을 비교해서 같을 때만 성공입니다.</p>
+</li>
+</ul>
+<blockquote>
+<p><code>Junit</code>에 <code>assertThat</code>과 다른 메서드입니다. assertj의 장점은 <a target="_blank" rel="noopener" href="http://bit.ly/30vm9Lg">링크</a>에서 확인할 수 있습니다. 다음에 확인해보도록 하겠습니다.</p>
+</blockquote>
+</li>
+</ol>
+<ol start="5">
+<li><p><code>@RequestParam</code></p>
+<ul>
+<li>외부에서 API로 넘긴 파라미터를 가져오는 어노테이션입니다.</li>
+</ul>
+</li>
+</ol>
+<br/>
+
+
+
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><blockquote>
+<p><code>스프링 부트와 AWS로 혼자 구현하는 웹 서비스</code> - 이동욱</p>
+</blockquote>
 
       </div>
       
@@ -294,7 +389,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">목록</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Start-Spring-Boot"><span class="toc-text">Start Spring Boot!</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#build-gradle"><span class="toc-text">build.gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Github"><span class="toc-text">Github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JUnit"><span class="toc-text">JUnit</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Start-Spring-Boot"><span class="toc-text">Start Spring Boot!</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#build-gradle"><span class="toc-text">build.gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Github"><span class="toc-text">Github</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Test-Code"><span class="toc-text">Test Code</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Annotation"><span class="toc-text">Annotation</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol>
     </div>
   </div>
 
