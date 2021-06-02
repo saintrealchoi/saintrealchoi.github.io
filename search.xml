@@ -4,7 +4,38 @@
   
     
     <entry>
-      <title>[WearMask] E01. YOLO (You Only Look Once)</title>
+      <title>[WearMask] E02. YOLO</title>
+      <link href="2021/06/02/wearmask-02/"/>
+      <url>2021/06/02/wearmask-02/</url>
+      
+        <content type="html"><![CDATA[<h1 id="YOLO-v1-v3-Report-Review"><a href="#YOLO-v1-v3-Report-Review" class="headerlink" title="YOLO v1~v3 Report Review"></a>YOLO v1~v3 Report Review</h1><br/><blockquote><p>이번 포스트에서는 YOLO 알고리즘을 만드신 <code>Joseph Redmon</code>의 논문을 리뷰해보도록 하겠습니다.  v2는 v1에 비해 방식이 달라졌지만 v3는 v2에 몇가지 기법들을 사용한 것으로 크게 달라지지 않아 Tech Report로 게재되어 있습니다. 논문은 <a href="https://pjreddie.com/darknet/">DarkNet</a>에서 받을 수 있습니다.</p></blockquote><br/><img width = "100%" src = "\image\down.jpg"/><br/><h2 id="YOLO-v1"><a href="#YOLO-v1" class="headerlink" title="YOLO v1"></a>YOLO v1</h2><blockquote><p> we frame object detection as a regression problem to spatially separated bounding boxes and associated class probabilities. - Abstract</p></blockquote><p>앞선 포스트에서도 언급했듯이 YOLO는 기존의 object detection들과는 다르게 1-stage detector입니다.</p><p>Image Classification을 했었을 때는 도대체 어떻게 localization(객체 탐지)와 recognization(클래스 분류)를 동시에 하나 싶었는데 이는 차차 살펴보도록 하겠습니다.</p><h3 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1. Introduction"></a>1. Introduction</h3><img src="\image\step.jpg"/><p>먼저 간단히 <strong>PIPELINE</strong>을 알려드리자면 위와 같습니다.</p><ol><li>이미지를 Resize한다. (448 X 448)</li><li>Model에 통과시킨다. (CNN based network)</li><li>NMS(Non Max Suppression)을 사용한다.</li></ol><p><code>YOLO</code>나오게 된 결정적인 이유는 바로 직관적인 이유라고 합니다. </p><p>인간은 이미지를 한번에 읽고 객체가 어디있는지, 그 객체들이 어느장소에 있는지를 판단할 수 있으며 굉장히 빠르고 정확합니다. </p><p>하지만, 기존의 딥러닝 모델(<code>Fast-RCNN</code>)은 <code>Regional Proposal</code>을 통해 <code>bounding box</code>를 생성하여 객체를 찾고 <code>classifier</code>를 실행하여 구분을 하는 2-stage의 방식을 사용하는데, 이러한 복잡한 파이프라인은 느리고 최적화하기 어렵다고 합니다.</p><p>따라서, 이를 해결하고자 <code>YOLO</code>는 <strong>Single Regression</strong>문제를 해결하는 <strong>1-stage detector</strong>로 설계하게 된 것입니다. </p><p>위의 <strong>PIPELINE</strong>을 살펴보면 SINGLE-NETWORK를 통과시키면 다수의 <code>bounding box</code>와 <code>class</code>를 알려주는 것을 확인할 수 있습니다.</p><p>또한 기존의 <code>Regional Proposal</code>방식을 사용할 경우 배경을 객체로 인식하는 실수를 범하게 되는데 <code>YOLO</code>는 <code>Fast R-CNN</code>보다 절반 이하로 이 error rate을 줄였다고 합니다.</p><h3 id="2-Unified-Detection"><a href="#2-Unified-Detection" class="headerlink" title="2. Unified Detection"></a>2. Unified Detection</h3><p>그렇다면 어떻게 <strong>1-stage detector</strong>로 설계할 수 있었을까요?</p><p><code>YOLO</code>는 전체이미지를 하나의 single neural network에 통과시켰습니다. 이 네트워크는 전체이미지로부터 feature들을 추출하고 bounding box를 예측하는데 사용했습니다. 또한, 이 bounding box가 어떤 class에 속해있는지 예측하기도 합니다. </p><p>즉, <strong>END TO END</strong> training이 가능해지고 높은 mAP로 높은 FPS를 얻게 되었습니다.</p><p>지금부터는 파이프라인을 자세히 살펴보도록 하겠습니다.</p><p>우선, 이미지를 <strong>S X S</strong> Grid로 쪼갭니다.  만약 객체의 중앙이 이 grid-cell안에 존재한다면, grid cell은 object가 존재한다라고 예측합니다.</p><p>각각의 grid-cell은 <strong>B</strong> bounding box들을 예측하게 되고 이가 존재하는지를 확률로 나타낸 <strong>confidence score</strong>를 예측하게됩니다. 이 때의 confidence score는 </p><p>$$Pr(Object) * IOU^{truth}_{pred}$$</p><p>로 정의됩니다.</p><p>만약 객체가 존재하지 않는다면, confidence score는 0이될 것입니다.</p><p>만약 객체가 존재한다면, <code>predicted box</code>와 <code>ground Truth</code>사이의 <strong>IOU</strong>가 confidence score가 되어야만 할 것입니다.</p><p>이 때, bounding box는 5개의 성분을 가지고 있습니다.<br>$$<br>x, \ y,\ w,\ h,\ and  \ \ confidence<br>$$</p><ul><li><strong>(x,y)</strong> : box의 center 좌표</li><li><strong>w,h</strong> : width, height</li><li><strong>confidence</strong> : IOU between the predicted box and any ground truth box</li></ul><p>각각의 Grid cell은 또한 class probability를 예측하는데, 이는 다음의 식을 통해 구합니다.</p><p>$$<br>Pr(Class|Object)* Pr(Object) * IOU^{truth}_{pred} = Pr(Class_i)*IOU^{truth}_{pred}<br>$$<br>베이즈의 정리를 사용하면 위와같이 수식이 바뀜을 알 수 있습니다.</p><p>위의 파이프라인을 적용시키는 예제를 살펴보면 아래의 그림과 같습니다.</p><br/><img src = "\image\pipe.jpg"/><br/><p><strong>이 때, 저자는 PASCAL VOC 데이터셋에서 S = 7, B = 2를 사용했고 C = 20을 사용했습니다. 그 결과 7 X 7 X 30 tensor가 출력됩니다.</strong></p><p>이 때, S = Grid cell의 크기, B= bounding box 수, C = class 수 입니다. (PASCAL VOC 데이터셋의 LABEL 수는 20개 이므로 C = 20입니다.)</p><h4 id="2-1-Network-Design"><a href="#2-1-Network-Design" class="headerlink" title="2.1 Network Design"></a>2.1 Network Design</h4><img src = "\image\archi.jpg"/><p>기본적으로 YOLO는 image classification모델인 GoogLeNet에 영감을 받아 backbone 네트워크를 설계하였습니다. 24개의 Conv layer와 2개의 FC layer로 구성되어 있습니다. 이 때, 1 X 1 reduction layer들을 3 X 3 Conv layer로 사용했다고 합니다. </p><p> 이후 버젼들에서는 backbone 네트워크를 Residual Learning을 통해 더 깊게 쌓았습니다.</p><p>보통 ImageNet데이터셋이 224 x 224인데, Object Detection의 영역에서는 high resolution이 더 좋은 성능을 가지고 있기 때문에 448 x 448의 input size를 갖게 됩니다.</p><ul><li>Activation function :  <code>Leaky ReLU</code></li><li>Optimizer : <code>Sum-Squared Error</code></li></ul><p>Optimizer로 sum-squared error를 사용한 이유는 최적화하기 쉽기 때문인데 이는 배경을 학습하는 것과 객체를 학습하는 것의 loss가 동일하게 학습할 시 문제가 발생하게 됩니다.</p><p>대부분의 이미지들은 배경의 부분이 객체가 있는 부분보다 훨씬 많은데 이를 조정하지 않으면 배경을 상대적으로 더 보게되는 효과가 생기게 됩니다.</p><p>따라서, 이를 줄이기 위해 loss function에서 다음의 상수를 도입하게 됩니다.<br>$$<br>\lambda_{coord}, \lambda_{noobj}<br>$$<br>위의 상수는 각각 <strong>5</strong>와 <strong>0.5</strong>를 대입하였다고 저자는 말했는데 이는 object가 없는 부분과 있는 부분을 학습시키는 비율을 다르게 조정함으로써 배경을 많이 학습하게 되는 걸 줄였다고 합니다.</p><img src = "\image\loss.jpg"/><p>저번 포스트에서 언급했던 loss function 입니다.</p><p>이번 시간에는 자세히 살펴보겠습니다.<br>$$</p><ol><li>\ \ \ \ \lambda_{coord}\sum^{S^2}<em>{i=0}\sum</em>{j=0}^{B}1^{obj}_{ij}[(x_i-x^{<code>&#125;_i)^2+(y_i-y^</code>_i)^2]<br>$$<br>box의 중앙을 regression하는 수식입니다.</li></ol><p>이 때 사용한<br>$$<br>1_{ij}^{obj}<br>$$<br>는 object가 존재했을 때 identity function을 말하며 존재하지 않는다면 zero matrix가 됩니다.</p><p>안쪽 시그마를 살펴보면 Bounding box의 개수만큼, 바깥쪽시그마를 살펴보면 그리드의 개수만큼을 모두 더하는 것을 확인할 수 있습니다.</p><p>$$<br>2. \quad \lambda_{coord}\sum^{S^2}<em>{i=0}\sum</em>{j=0}^{B}1^{obj}_{ij}[(\sqrt{w_i}-\sqrt{w^{<code>&#125;_i&#125;)^2+(\sqrt&#123;h_i&#125;-\sqrt&#123;h^</code>_i})^2]<br>$$<br><code>1.</code>의 수식과 굉장히 비슷한데 w,h에 제곱근이 씌워져있는 것을 볼 수 있습니다. </p><p>만약 제곱근을 씌우지 않는 상태라면 상대적으로 큰 박스의 SSE가 크므로 작은 박스를 학습하지 않는 경향이 생길 수 있습니다. 따라서, Regularization의 의미로 sqrt를 씌우게 됩니다.</p><img src = "\image\Table.jpg"/><p>인간이 실시간으로 인식하는 FPS(Frame Per Second)는 30FPS인데 YOLO는 그를 상회하는 45FPS를 기록하는 것을 확인할 수 있습니다.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> WearMask </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> WearMask </tag>
+            
+            <tag> Capstone </tag>
+            
+            <tag> DeepLearning </tag>
+            
+            <tag> YOLO </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>[WearMask] E01. Object Detection</title>
       <link href="2021/05/31/wearmask-01/"/>
       <url>2021/05/31/wearmask-01/</url>
       
