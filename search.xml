@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>[C++] E01. STL</title>
+      <link href="2021/07/09/cpp-01/"/>
+      <url>2021/07/09/cpp-01/</url>
+      
+        <content type="html"><![CDATA[<h1 id="c-함수정리"><a href="#c-함수정리" class="headerlink" title="c++ 함수정리"></a>c++ 함수정리</h1><h2 id="OpenCV"><a href="#OpenCV" class="headerlink" title="OpenCV"></a>OpenCV</h2><h3 id="자료구조"><a href="#자료구조" class="headerlink" title="자료구조"></a>자료구조</h3><ol><li>cv::Point</li><li>cv::Mat</li><li>cv::rectangle</li><li>cv::Scalar</li></ol><h3 id="함수"><a href="#함수" class="headerlink" title="함수"></a>함수</h3><ol><li>cv::imread</li><li>cv::imwrite</li><li>cv::imshow</li><li>cv::VideoCapture</li><li>cv::EVENT_LBUTTONDOWN</li><li>cv::EVENT_RBUTTONDOWN</li><li>cv::namedWindow</li><li>cv::setMouseCallback</li><li>cv::waitKey</li><li>cv::namedWindow</li><li>cv::destroyWindow</li><li>cv::putText</li><li></li></ol><h2 id="boost-geometry"><a href="#boost-geometry" class="headerlink" title="boost::geometry"></a>boost::geometry</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> bg = boost::geometry;</span><br></pre></td></tr></table></figure><h3 id="자료구조-1"><a href="#자료구조-1" class="headerlink" title="자료구조"></a>자료구조</h3><ol><li>bg::model::point</li><li>bg::model::polygon</li><li>bg::model::multi_polygon</li></ol><h3 id="함수-1"><a href="#함수-1" class="headerlink" title="함수"></a>함수</h3><ol><li>bg::read_wkt</li><li>bg::validity_failure_tytpe</li><li>bg::is_valid</li><li>bg::correct</li><li>bg::area</li><li>bg::intersection</li></ol><h2 id="Eigen-MatrixXd"><a href="#Eigen-MatrixXd" class="headerlink" title="Eigen::MatrixXd"></a>Eigen::MatrixXd</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> Eigen;</span><br></pre></td></tr></table></figure><ol><li>MatrixXd::Zero</li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> C++ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> c++ </tag>
+            
+            <tag> STL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>[CMake] E00.CMakelist.txt 작성</title>
       <link href="2021/07/07/CMake/"/>
       <url>2021/07/07/CMake/</url>
