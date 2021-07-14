@@ -58,7 +58,7 @@
     
     
     <entry>
-      <title>[CMake] E00.CMakelist.txt 작성</title>
+      <title>[CMake] CMakelist.txt 작성</title>
       <link href="2021/07/07/CMake/"/>
       <url>2021/07/07/CMake/</url>
       
@@ -67,14 +67,18 @@
       
       <categories>
           
-          <category> -CMake </category>
+          <category> CMake </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> -cmake -cmakelists.txt -build </tag>
+            <tag> cmake </tag>
+            
+            <tag> cmakelists.txt </tag>
+            
+            <tag> build </tag>
             
         </tags>
       
