@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[C++] E02. OpenCV cv::Mat | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[C++] E02. OpenCV cv::Mat</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-07-14
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/C/" title="C++">
+                    <b>#</b> C++
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/OpenCV/" title="OpenCV">
+                    <b>#</b> OpenCV
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Mat/" title="Mat">
+                    <b>#</b> Mat
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="OpenCV"><a href="#OpenCV" class="headerlink" title="OpenCV"></a>OpenCV</h1><br/>
+
+
+
+<hr>
+<h2 id="cv-Mat"><a href="#cv-Mat" class="headerlink" title="cv::Mat"></a>cv::Mat</h2><br/>
+
+
+
+<p>OpenCV의 Mat자료구조에 대해서 살펴보도록 하겠습니다.</p>
+<p>먼저 간단한 예제를 통해 이미지를 읽어 Mat에 어떻게 저장되는지 확인해보겠습니다.</p>
+<blockquote>
+<p>opencv를 이용하여 imread를 할 시 RGB로 순서가 아닌 BGR로 읽게됩니다. 따라서, 채널별로 조작을 하고 싶다면 cv::cvtColor()를 통해 BGR2RGB를 하거나 채널 순서를 헷갈리지 않고 작업을 해야합니다.</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;opencv2/opencv.hpp&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;  </span></span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">char</span>**)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    cv::Mat img_color = cv::imread(<span class="string">&quot;./test.jpg&quot;</span>);</span><br><span class="line"></span><br><span class="line">    cv::namedWindow(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"></span><br><span class="line">    cv::imshow(<span class="string">&quot;name&quot;</span>, img_color);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">char</span> ch = cv::waitKey();	<span class="comment">// 무한 대기</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ch == <span class="number">27</span>|| ch == <span class="number">32</span>)&#123;</span><br><span class="line">        cv::destroyWindow(<span class="string">&quot;name&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+
+<br/>
+
+
+
+<img src = "\image\opencv-00.png"/>
+
+
+<br/>
+
+
+<p>위와 같은 사진이 저장된 img_color의 저장방식을 살펴보도록하겠습니다.</p>
+<br/>
+
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">char</span>**)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    cv::Mat img_color = cv::imread(<span class="string">&quot;./test.jpg&quot;</span>);</span><br><span class="line">    cv::Mat imgSample = img_color(cv::Rect(<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>));;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Region of (5,5,5,5) : &quot;</span> &lt;&lt; imgSample &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br/>
+
+<br/>
+
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Region of (5,5,5,5) : [167, 166, 168, 167, 166, 168, 167, 166, 168, 167, 166, 170, 168, 167, 171;</span><br><span class="line"> 168, 167, 169, 168, 167, 169, 168, 167, 169, 168, 167, 171, 168, 167, 171;</span><br><span class="line"> 168, 167, 169, 168, 167, 169, 168, 167, 169, 168, 167, 171, 168, 167, 171;</span><br><span class="line"> 169, 168, 170, 169, 168, 170, 169, 168, 170, 169, 168, 172, 169, 168, 172;</span><br><span class="line"> 169, 168, 170, 169, 168, 170, 169, 168, 170, 169, 168, 172, 169, 168, 172]</span><br></pre></td></tr></table></figure>
+<br/>
+
+
+<p>cv::Rect(5,5,5,5)는 point(5,5)로부터 width, height가 각각 5인 직사각형 영역을 의미합니다.</p>
+<p>즉, 25개의 픽셀값이 들어가는데 출력시 75개의값이 반환되는 것을 볼 수 있습니다.</p>
+<p>이는, RGB채널마다 픽셀값을 가지고 있기 때문입니다.</p>
+<p>따라서, 5,5라는 점에서의 가로 5 세로 5의 사각형은 아래와 같습니다.</p>
+<br/>
+
+
+<blockquote>
+<p>이해를 돕기위해 width, height = 100으로 증가시켰습니다.</p>
+</blockquote>
+<img src = "\image\opencv-01.jpg"/>
+
+
+<br/>
+
+
+
+<h2 id="Mat-생성-방법"><a href="#Mat-생성-방법" class="headerlink" title="Mat 생성 방법"></a>Mat 생성 방법</h2><br/>
+
+<blockquote>
+<p>C++: Mat::Mat()<br>C++ : Mat::Mat(int rows, int cols, int type)<br>C++ : Mat::Mat(Size size, int type)<br>C++ : Mat::Mat(int rows, int cols, int type, const Scalar&amp; s)<br>C++ : Mat::Mat(Size size, int type, const Scalar&amp; s)<br>C++ : Mat::Mat(const Mat&amp; m)<br>C++ : Mat::Mat(int rows, int cols, int type, void* data, size_t step = AUTO_STEP)<br>C++ : Mat::Mat(Size size, int type, void* data, size_t step = AUTO_STEP)<br>C++ : Mat::Mat(const Mat&amp; m, const Range&amp; rowRange, const Range&amp; colRange = Range::all())<br>C++ : Mat::Mat(const Mat&amp; m, const Rect&amp; roi)<br>C++ : Mat::Mat(const CvMat* m, bool copyData = false)<br>C++ : Mat::Mat(const IplImage* img, bool copyData = false)</p>
+<p>출처: <a target="_blank" rel="noopener" href="https://nextus.tistory.com/14">https://nextus.tistory.com/14</a> [ReStartAllKill]</p>
+</blockquote>
+<br/>
+
+<p>위의 다양한 생성자에서 <code>type</code>이라는 변수가 있는데 아래와 같은 상수를 통해 값을 설정합니다.</p>
+<br/>
+
+<blockquote>
+<p>CV_8UC1 : 8 - bit unsigned integer : uchar(0..255)<br>CV_8SC1 : 8 - bit signed integer : schar(-128..127)<br>CV_16UC1 : 16 - bit unsigned integer : ushort(0..65535)<br>CV_16SC1 : 16 - bit signed integer : short(-32768..32767)<br>CV_32SC1 : 32 - bit signed integer : int(-2147483648..2147483647)<br>CV_32FC1 : 32 - bit floating - point number : float(-FLT_MAX..FLT_MAX, INF, NAN)<br>CV_64FC1 : 64 - bit floating - point number : double(-DBL_MAX..DBL_MAX, INF, NAN)</p>
+<p>출처: <a target="_blank" rel="noopener" href="https://nextus.tistory.com/14">https://nextus.tistory.com/14</a> [ReStartAllKill]</p>
+</blockquote>
+<p>CV_64FC1으로 살펴보면 다음과 같습니다.</p>
+<ol>
+<li><strong>64</strong> : bit단위를 말하며 위의 예시는 64bit를 의미합니다. 즉, 0~2^64를 의미합니다.</li>
+<li><strong>F</strong> : 부호 결정자로 <strong>F는 Floating, S는 Signed, U는 Unsigned</strong>를 의미합니다.</li>
+<li><strong>C1</strong>: Channel의 약자로 <strong>C1</strong>의 경우 생략이 가능하며 그 외는 C1~C8범위가 가능합니다.</li>
+</ol>
+<p>가장 처음 살펴본 강아지의 경우 RGB값이 있는 3 channel의 8bit image이므로 <strong>CV_8UC3</strong>의 데이터타입을 갖게 됩니다.</p>
+<p>위와같은 데이터타입을 생성할 수도 있는데 </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//mat.hpp</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CV_MAKETYPE(depth,cn) (CV_MAT_DEPTH(depth) + (((cn)-1) &lt;&lt; CV_CN_SHIFT))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//main.cpp</span></span><br><span class="line">CV_MAKETYPE(CV_32F,<span class="number">5</span>);    <span class="comment">//CV_32FC5</span></span><br></pre></td></tr></table></figure>
+<p>위와 같이 입력할 경우 CV_32FC5이라는 상수명으로 5 + 4 &lt;&lt; 3 = 69라는 값이 저장되게 됩니다.</p>
+<br/>
+
+
+
+<hr>
+<br/>
+
+
+
+<h3 id="OpenCV-핸드북-다크프로그래머님-https-darkpgmr-tistory-com-46"><a href="#OpenCV-핸드북-다크프로그래머님-https-darkpgmr-tistory-com-46" class="headerlink" title="OpenCV 핸드북 - 다크프로그래머님 - https://darkpgmr.tistory.com/46"></a>OpenCV 핸드북 - 다크프로그래머님 - <a target="_blank" rel="noopener" href="https://darkpgmr.tistory.com/46">https://darkpgmr.tistory.com/46</a></h3><blockquote>
+<p>using namespace cv;</p>
+</blockquote>
+<br/>
+
+
+
+<h4 id="이미지-읽기-및-저장"><a href="#이미지-읽기-및-저장" class="headerlink" title="이미지 읽기 및 저장"></a>이미지 읽기 및 저장</h4><br/>
+
+
+
+<ol>
+<li>imread()를 통한 이미지 읽기</li>
+</ol>
+<p>​    Mat img_color = imread(“sample.jpg”);    // color load</p>
+<p>​    Mat img_gray = imread(“sample.jpg”, 0);  // gray load</p>
+<p>​    Mat img_16bit = imread(“sample.jpg”, cv::IMREAD_ANYDEPTH); // 원본 depth로 읽기</p>
+<p>​    </p>
+<ol start="2">
+<li><p>imwrite()를 통한 이미지 저장</p>
+<p>imwrite(“fname.jpg”, img);</p>
+</li>
+</ol>
+<br/>
+
+
+
+<h4 id="이미지-생성-복사-형변환-색상변환-roi-설정"><a href="#이미지-생성-복사-형변환-색상변환-roi-설정" class="headerlink" title="이미지 생성, 복사, 형변환, 색상변환, roi 설정"></a>이미지 생성, 복사, 형변환, 색상변환, roi 설정</h4><br/>
+
+
+
+<p>​    int w = 320;// width</p>
+<p>​    int h = 240;// height</p>
+<br/>
+
+
+
+<ul>
+<li>생성자를 통한 변수 생성</li>
+</ul>
+<p>​    Mat img(h,w,CV_8UC1);//1채널 unsigned char</p>
+<p>​    Mat img(h,w,CV_8UC3);//3채널 unsigned char</p>
+<p>​    Mat img = Mat::zeros(h,w,CV_32FC1);//1채널 float</p>
+<p>​    Mat img = Mat::ones(h,w,CV_64FC3);//3채널 double</p>
+<p>​    unsigned char * img_buffer;// 이미지버퍼 포인터</p>
+<p>​    Mat img(h, w, CV_8UC3, img_buffer);//메모리 공유</p>
+<br/>
+
+
+
+<ul>
+<li>Scalar()를 통한 원소 초기화</li>
+</ul>
+<p>​    Mat img(h,w,CV_8UC1);</p>
+<p>​    img = Scalar(3); // img 모든 원소값 3으로 초기화</p>
+<br/>
+
+
+
+<ul>
+<li>이미지 참조 및 복사</li>
+</ul>
+<p>​    Mat img2 = img;    // 메모리 공유</p>
+<p>​    Mat img2 = img.clone();    // 별도 메모리</p>
+<p>​    Mat img2; img.copyTo(img2);//별도 메모리    </p>
+<br/>
+
+
+
+<ul>
+<li>형변환을 통한 복사</li>
+</ul>
+<p>​    Mat img1(h,w,CV_32FC1);</p>
+<p>​    Mat img2;</p>
+<p>​    img1.convertTo(img2, CV_8U);</p>
+<br/>
+
+
+
+<ul>
+<li>gray-color 변환</li>
+</ul>
+<p>​    cvtColor(color, gray, CV_BGR2GRAY);</p>
+<p>​    cvtColor(gray, color, CV_GRAY2BGR);</p>
+<br/>
+
+
+
+<ul>
+<li>ROI(Region Of Interst) 설정</li>
+</ul>
+<p>​    Rect roi;</p>
+<p>​    Mat sub_img = img(roi);//메모리공유</p>
+<p>​    Mat sub_img = img(roi).clone();//별도메모리</p>
+<br/>
+
+
+
+<h4 id="행렬-원소접근-및-생성초기화"><a href="#행렬-원소접근-및-생성초기화" class="headerlink" title="행렬 원소접근 및 생성초기화"></a>행렬 원소접근 및 생성초기화</h4><br/>
+
+
+
+<p>​    Mat A = (Mat_<int>(3,1) &lt;&lt; 1, 2, 3);</p>
+<p>​    Mat B = (Mat_<double>(3,2) &lt;&lt; 1, 1, 2, 2, 3, 3); // 첫 번째 행부터 채워짐</p>
+<p>​    A.at<int>(2,0) = 3; // .at<type>(y, x)</p>
+<p>​    B.at<double>(2,1) = -0.1;</p>
+<p>​    Mat C(h, w, CV_8UC3);</p>
+<p>​    C.at<Vec3b>(y, x)[0]; // blue</p>
+<p>​    C.at<Vec3b>(y, x)[1]; // green </p>
+<p>​    C.at<Vec3b>(y, x)[2]; // red</p>
+<br/>
+
+
+
+<h4 id="영상-크기변경-및-상하좌우-반전"><a href="#영상-크기변경-및-상하좌우-반전" class="headerlink" title="영상 크기변경 및 상하좌우 반전"></a>영상 크기변경 및 상하좌우 반전</h4><br/>
+
+
+
+<ul>
+<li>크기 변경</li>
+</ul>
+<p>​    Mat dst;</p>
+<p>​    resize(img, dst, cv::Size(new_w,new_h));</p>
+<p>​    resize(img, dst, cv::Size(), 0.5, 0.5);//scalex, scaley</p>
+<ul>
+<li>영상 반전(flip)</li>
+</ul>
+<p>​    flip(img, dst, 0);// vertical flip</p>
+<p>​    flip(img, dst, 1);// horizontal flip</p>
+<p>​    flip(img, dst, -1);// vertial &amp; horizontal flip</p>
+<br/>
+
+
+
+<h4 id="이미지에-그리기-drawing"><a href="#이미지에-그리기-drawing" class="headerlink" title="이미지에 그리기 (drawing)"></a>이미지에 그리기 (drawing)</h4><br/>
+
+
+
+<p>​    Rect rc(x,y,w,h);</p>
+<p>​    Scalar color(B,G,R);</p>
+<p>​    int thickness=1;    // line thickness</p>
+<p>​    line(img, Point(x1,y1), Point(x2,y2), color, thickness);</p>
+<p>​    rectangle(img, rc, color, thickness);</p>
+<p>​    rectangle(img, rc.tl(), rc.br(), color, thickness); // tl = TopLeft, br = BottomRight</p>
+<p>​    rectangle(img, rc, color, CV_FILLED);    // filled rectangle</p>
+<p>​    Point center(rc.x+rc.width/2, rc.y+rc.height/2);</p>
+<p>​    Size radius(rc.width/2, rc.height/2);</p>
+<p>​    double rot_deg = 0;    // rotation of ellipse</p>
+<p>​    double s_deg = 0;    // start angle of arc</p>
+<p>​    double e_deg = 360;    // end angle of arc</p>
+<p>​    ellipse(img,center,radius,rot_deg,s_deg,e_deg,color,thickness);</p>
+<p>​    ellipse(img,center,radius,rot_deg,s_deg,e_deg,color,CV_FILLED);</p>
+<p>​    int circle_radius = 10;</p>
+<p>​    circle(img, center, circle_radius, color, thickness);</p>
+<p>​    circle(img, center, circle_radius, color, CV_FILLED);</p>
+<p>​    putText(img, “text”, Point(x,y), FONT_HERSHEY_SIMPLEX, 1., color, thickness);</p>
+<p>​    putText(img, “text”, Point(x,y), FONT_HERSHEY_DUPLEX, 1., color, thickness);</p>
+<br/>
+
+
+
+<h4 id="이미지-디스플레이하기-display"><a href="#이미지-디스플레이하기-display" class="headerlink" title="이미지 디스플레이하기 (display)"></a>이미지 디스플레이하기 (display)</h4><br/>
+
+
+
+<p>​    namedWindow(“name”);    // auto resized</p>
+<p>​    namedWindow(“name”,CV_WINDOW_NORMAL);    // manual resize</p>
+<p>​    imshow(“name”, img);</p>
+<p>​    char ch = waitKey();    // 무한 대기</p>
+<p>​    char ch = waitKey(10);    // 10 msec 대기</p>
+<p>​    if(ch == 27) …    // ESC key</p>
+<p>​    if(ch == 32) …    // SPACE key</p>
+<p>​    destroyWindow(“name”);</p>
+<p>​    destroyAllWindows();</p>
+<br/>
+
+
+
+<h4 id="웹캠-연결하기"><a href="#웹캠-연결하기" class="headerlink" title="웹캠 연결하기"></a>웹캠 연결하기</h4><br/>
+
+
+
+<p>​    VideoCapture vc(0);</p>
+<p>​    if (!vc.isOpened()) return; // 연결실패</p>
+<p>​    vc.set(CV_CAP_PROP_FRAME_WIDTH, 640);</p>
+<p>​    vc.set(CV_CAP_PROP_FRAME_HEIGHT, 480);</p>
+<p>​    Mat img;</p>
+<p>​    while(1){</p>
+<p>​        vc &gt;&gt; img;</p>
+<p>​        if(img.empty()) break;</p>
+<p>​        imshow(“cam”,img);</p>
+<p>​        if(waitKey(10)==27) break; //ESC</p>
+<p>​    }</p>
+<p>​    destroyAllWindows();</p>
+<br/>
+
+
+
+<h4 id="avi-비디오-파일-읽어오기"><a href="#avi-비디오-파일-읽어오기" class="headerlink" title="avi 비디오 파일 읽어오기"></a>avi 비디오 파일 읽어오기</h4><br/>
+
+
+
+<p>​    VideoCapture vc(“sample.avi”);</p>
+<p>​    if (!vc.isOpened()) return; // 불러오기 실패</p>
+<p>​    Mat img;</p>
+<p>​    while(1){</p>
+<p>​        vc &gt;&gt; img;</p>
+<p>​        if(img.empty()) break;</p>
+<p>​        imshow(“video”,img);</p>
+<p>​        if(waitKey(10)==27) break; //ESC</p>
+<p>​    }</p>
+<p>​    destroyAllWindows();</p>
+<p>​    </p>
+<br/>
+
+
+
+<h4 id="avi-비디오-녹화하기"><a href="#avi-비디오-녹화하기" class="headerlink" title="avi 비디오 녹화하기"></a>avi 비디오 녹화하기</h4><br/>
+
+
+
+<p>​    double fps = 15;</p>
+<p>​    int fourcc = CV_FOURCC(‘X’,’V’,’I’,’D’); // codec (opencv3.0이하)</p>
+<p>​    int fourcc = VideoWriter::fourcc(‘X’,’V’,’I’,’D’); // opencv3.0이상</p>
+<p>​    bool isColor = true;</p>
+<p>​    VideoWriter *video = new VideoWriter;</p>
+<p>​    if(!video-&gt;open(“result.avi”, fourcc, fps, Size(img_w, img_h), isColor)){</p>
+<p>​        delete video;</p>
+<p>​        return;</p>
+<p>​    }</p>
+<p>​    Mat img;</p>
+<p>​    while(1){</p>
+<p>​        // …</p>
+<p>​        *video &lt;&lt; img;</p>
+<p>​        // …</p>
+<p>​    }</p>
+<p>​    delete video;</p>
+<p>​    ※ 코덱 목록: <a target="_blank" rel="noopener" href="http://www.fourcc.org/codecs.php">http://www.fourcc.org/codecs.php</a></p>
+<br/>
+
+
+
+<h4 id="창에-Trackbar-붙이기"><a href="#창에-Trackbar-붙이기" class="headerlink" title="창에 Trackbar 붙이기"></a>창에 Trackbar 붙이기</h4><br/>
+
+
+
+<p>​    int threshold = 10;</p>
+<p>​    cv::namedWindow(“display”);</p>
+<p>​    cv::createTrackbar(“thr:”, “display”, &amp;threshold, 1000);</p>
+<br/>
+
+
+
+<h2 id="REFERENCE"><a href="#REFERENCE" class="headerlink" title="REFERENCE"></a>REFERENCE</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://nextus.tistory.com/15?category=762131">https://nextus.tistory.com/15?category=762131</a></li>
+<li><a target="_blank" rel="noopener" href="https://darkpgmr.tistory.com/46">https://darkpgmr.tistory.com/46</a></li>
+</ol>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/07/09/cpp-01/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-07-14
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/C/" title="C++">
+                        <b>#</b> C++
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/OpenCV/" title="OpenCV">
+                        <b>#</b> OpenCV
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Mat/" title="Mat">
+                        <b>#</b> Mat
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenCV"><span class="toc-text">OpenCV</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cv-Mat"><span class="toc-text">cv::Mat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mat-%EC%83%9D%EC%84%B1-%EB%B0%A9%EB%B2%95"><span class="toc-text">Mat 생성 방법</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenCV-%ED%95%B8%EB%93%9C%EB%B6%81-%EB%8B%A4%ED%81%AC%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%A8%B8%EB%8B%98-https-darkpgmr-tistory-com-46"><span class="toc-text">OpenCV 핸드북 - 다크프로그래머님 - https:&#x2F;&#x2F;darkpgmr.tistory.com&#x2F;46</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%9D%BD%EA%B8%B0-%EB%B0%8F-%EC%A0%80%EC%9E%A5"><span class="toc-text">이미지 읽기 및 저장</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%83%9D%EC%84%B1-%EB%B3%B5%EC%82%AC-%ED%98%95%EB%B3%80%ED%99%98-%EC%83%89%EC%83%81%EB%B3%80%ED%99%98-roi-%EC%84%A4%EC%A0%95"><span class="toc-text">이미지 생성, 복사, 형변환, 색상변환, roi 설정</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%ED%96%89%EB%A0%AC-%EC%9B%90%EC%86%8C%EC%A0%91%EA%B7%BC-%EB%B0%8F-%EC%83%9D%EC%84%B1%EC%B4%88%EA%B8%B0%ED%99%94"><span class="toc-text">행렬 원소접근 및 생성초기화</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%98%81%EC%83%81-%ED%81%AC%EA%B8%B0%EB%B3%80%EA%B2%BD-%EB%B0%8F-%EC%83%81%ED%95%98%EC%A2%8C%EC%9A%B0-%EB%B0%98%EC%A0%84"><span class="toc-text">영상 크기변경 및 상하좌우 반전</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%97%90-%EA%B7%B8%EB%A6%AC%EA%B8%B0-drawing"><span class="toc-text">이미지에 그리기 (drawing)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%94%94%EC%8A%A4%ED%94%8C%EB%A0%88%EC%9D%B4%ED%95%98%EA%B8%B0-display"><span class="toc-text">이미지 디스플레이하기 (display)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%9B%B9%EC%BA%A0-%EC%97%B0%EA%B2%B0%ED%95%98%EA%B8%B0"><span class="toc-text">웹캠 연결하기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#avi-%EB%B9%84%EB%94%94%EC%98%A4-%ED%8C%8C%EC%9D%BC-%EC%9D%BD%EC%96%B4%EC%98%A4%EA%B8%B0"><span class="toc-text">avi 비디오 파일 읽어오기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#avi-%EB%B9%84%EB%94%94%EC%98%A4-%EB%85%B9%ED%99%94%ED%95%98%EA%B8%B0"><span class="toc-text">avi 비디오 녹화하기</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EC%B0%BD%EC%97%90-Trackbar-%EB%B6%99%EC%9D%B4%EA%B8%B0"><span class="toc-text">창에 Trackbar 붙이기</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#REFERENCE"><span class="toc-text">REFERENCE</span></a></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
