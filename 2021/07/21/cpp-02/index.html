@@ -127,6 +127,18 @@
                   </a>
                 </span>
                 
+                <span class="span--tag">
+                  <a href="/tags/smartPointers/" title="smartPointers">
+                    <b>#</b> smartPointers
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/jariItSue/" title="jariItSue">
+                    <b>#</b> jariItSue
+                  </a>
+                </span>
+                
               </span>
           
       </div>
@@ -156,6 +168,20 @@
 
 
 <p>따라서, C++에서는 메모리의 지정 및 해제를 new, delete를 통해 프로그래머가 직접 설정해야 하는데 인간은 여태까지 그래왔듯 실수를 하기 마련입니다. 그럴 경우 메모리 누수(memory leak)이 발생하게 되고 오류로 이어질 수 있습니다. 이러한 실수를 방지할 수 있는 방법 중 한가지가 바로 스마트포인터입니다.</p>
+<br/>
+
+
+
+<h2 id="Resource-Acquisition-Is-Initialization-RAII"><a href="#Resource-Acquisition-Is-Initialization-RAII" class="headerlink" title="Resource Acquisition Is Initialization - RAII"></a>Resource Acquisition Is Initialization - RAII</h2><br/>
+
+
+
+<p>C++ 창시자인 비야네 스트로스트룹은 C++에서 자원을 관리하는 방법으로 RAII의 패턴을 제안하였습니다. 직역하면 **”자원의 획득은 초기화다”**인데 이는 자원 관리를 스택에 할당한 객체를 통해 수행하게 되는 것입니다.</p>
+<br/>
+
+
+
+<p>예외가 발생하여 함수 혹은 해당 스코프를 벗어날 경우 해당 스택에 정의되어 있는 모든 객체들은 소멸자가 호출되지만(<strong>stack unwinding</strong>) 객체가 아닌 포인터들의 경우 소멸자가 호출되지 않아 메모리 누수(memory leak)가 발생하게 됩니다. 즉, <strong>자원관리를 스택의 객체(포인터 객체)를 통해 수행하게 되는 것입니다.</strong></p>
 <br/>
 
 
@@ -506,53 +532,149 @@
 
 
 
-<p>autoupw1(std::make_unique<Widget>());// make 함수 사용std::unique_ptr<Widget>upw2(newWidget);// make 함수 비사용autospw1(std::make_shared<Widget>());// make 함수 사용std::shared_ptr<Widget>spw2(newWidget);// make 함수 비사용<br> 위와 같이 make 함수를 사용했을 때와 안했을 때의 차이를 볼 수 있습니다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">autoupw1(<span class="built_in">std</span>::make_unique&lt;Widget&gt;());<span class="comment">// make 함수 사용</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;Widget&gt;upw2(newWidget);<span class="comment">// make 함수 비사용</span></span><br><span class="line"></span><br><span class="line">autospw1(<span class="built_in">std</span>::make_shared&lt;Widget&gt;());<span class="comment">// make 함수 사용</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;Widget&gt;spw2(newWidget);<span class="comment">// make 함수 비사용</span></span><br></pre></td></tr></table></figure>
+
+
+<br/>
+
+
+
+
+<p> 위와 같이 make 함수를 사용했을 때와 안했을 때의 차이를 볼 수 있습니다.</p>
+<br/>
+
+
+
+<blockquote>
 <ol>
 <li>Widget이라는 타입이 중복 사용</li>
 </ol>
+</blockquote>
+<br/>
+
+
+
 <p>make함수를 사용하지 않는다면 widget이라는 type이 두 번 등장하고 있습니다. 이는 중복되는 코드를 지양해야하는 SW 엔지니어링 관점에서 좋지 않은 구문입니다.</p>
+<br/>
+
+
+
 <p>중복 코드가 입력됐을 때 생기는 컴파일 타임의 증가, 코드량의 증가, 일치하지 않는 코드의 증가 등의 이유로 생길 수 있는 버그의 문제 때문에 make함수가 권장됩니다.</p>
 <p>​    </p>
+<br/>
+
+
+
+<blockquote>
 <ol start="2">
 <li>exception safety</li>
 </ol>
+</blockquote>
+<br/>
+
+
+
 <p>다음은 예시를 통해 살펴보겠습니다.</p>
+<br/>
+
+
+
 <p>우선순위를 통해 Widget 객체를 처리하는 함수가 다음과 같을 때</p>
-<p>void processWidget(std::shared_ptr<Widget> spw, int priority);</p>
+<p><code>void processWidget(std::shared_ptr&lt;Widget&gt; spw, int priority);</code></p>
+<br/>
+
+
+
 <p> processWidget이 항상 매개변수로 전달되는 shared_ptr의 복사본을 만들면 타당하다할 수 있습니다.</p>
+<br/>
+
+
+
 <p>여기서 우선순위를 계산하는 함수를 다음과 같이 지정하고</p>
-<p>int computePriority();</p>
+<br/>
+
+
+
+<p><code>int computePriority();</code></p>
+<br/>
+
+
+
 <p>다음과 같이 make함수를 사용하지 않고 processWidget을 실행할 경우</p>
 <p>​    </p>
-<p>​    </p>
-<p>processWidget(std::shared_ptr<Widget>(new Widget), computePriority());</p>
+<br/>
+
+
+
+<p><code>processWidget(std::shared_ptr&lt;Widget&gt;(new Widget), computePriority());</code></p>
 <p> 위 함수는 세가지 동작이 완료된 후에 동작합니다.</p>
-<p>새로운 Widget 객체 생성 ( new를 통해 )</p>
-<p>Widget 객체를 인자로 전달해서 std::shared_ptr 생성</p>
-<p>compute_priority 함수 실행</p>
+<br/>
+
+
+
+<blockquote>
+<ol>
+<li><p>새로운 Widget 객체 생성 ( new를 통해 )</p>
+</li>
+<li><p>Widget 객체를 인자로 전달해서 std::shared_ptr 생성</p>
+</li>
+<li><p>compute_priority 함수 실행</p>
+</li>
+</ol>
+</blockquote>
 <p>​    </p>
+<br/>
+
+
+
 <p>위 세가지 동작은 컴파일러마다 다른 순서로 진행될 수 있습니다.</p>
+<br/>
+
+
+
+<blockquote>
 <p>1-2-3의 경우에 3에서 예외가 발생할 경우 std::shared_ptr가 자동으로 메모리 해제를 하겠지만</p>
 <p>1-3-2의 경우에 3에서 예외가 발생할 경우 2에서 std::shared_ptr에 의해서 메모리가 관리될 수 없으므로 memory leak이 발생합니다.</p>
+</blockquote>
 <p>​    </p>
+<br/>
+
+
+
 <p>하지만, make함수를 사용할 경우 1과 2가 동시에 진행이 되어 컴파일러에 따라 다른 결과를 반환하지 않게됩니다.</p>
 <p>​    </p>
+<br/>
+
+
+
 <p>다만, make함수는 다음과 같은 경우에 사용하지 말아야합니다.</p>
-<p>삭제자를 지정하려고할 때</p>
-<p>std::initializer_list를 매개변수로 갖는 생성자가 오버로드 되어있는 클래스</p>
-<p>make_shared - </p>
-<p>​    </p>
-<p>​    </p>
-<p>iterator 연동</p>
-<p>​    </p>
-<p>장점</p>
-<p>​    </p>
-<p>memory leak이 발생하는 경우 대표적인 실수</p>
-<p>​    </p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
-<li><a target="_blank" rel="noopener" href="https://itability.tistory.com/37">https://itability.tistory.com/37</a></li>
+<br/>
+
+
+
+<blockquote>
+<ol>
+<li>삭제자를 지정하려고할 때</li>
+<li>std::initializer_list를 매개변수로 갖는 생성자가 오버로드 되어있는 클래스</li>
 </ol>
+</blockquote>
 <p>​    </p>
+<br/>
+
+
+
+<br/>
+
+
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><br/>
+
+
+
+<ol>
+<li><a target="_blank" rel="noopener" href="https://itability.tistory.com/37">https://itability.tistory.com/37</a></li>
+<li><a target="_blank" rel="noopener" href="https://modoocode.com/229">https://modoocode.com/229</a></li>
+</ol>
 
       </div>
       
@@ -591,6 +713,18 @@
                       </a>
                     </span>
                     
+                    <span class="span--tag">
+                      <a href="/tags/smartPointers/" title="smartPointers">
+                        <b>#</b> smartPointers
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/jariItSue/" title="jariItSue">
+                        <b>#</b> jariItSue
+                      </a>
+                    </span>
+                    
                   </span>
               
           </div>
@@ -604,7 +738,7 @@
   <div class="post-catalog" id="catalog">
     <div class="title">목록</div>
     <div class="catalog-content">
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Smart-Pointers"><span class="toc-text">Smart Pointers</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-counting"><span class="toc-text">Reference counting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Call-by-reference"><span class="toc-text">Call by reference</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#move"><span class="toc-text">move()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reset"><span class="toc-text">reset()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr%EC%9D%98-%EC%A3%BC%EC%9D%98%ED%95%A0-%EC%A0%90"><span class="toc-text">shared_ptr의 주의할 점</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Smart-Pointers"><span class="toc-text">Smart Pointers</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Resource-Acquisition-Is-Initialization-RAII"><span class="toc-text">Resource Acquisition Is Initialization - RAII</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shared-ptr"><span class="toc-text">shared_ptr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference-counting"><span class="toc-text">Reference counting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Call-by-reference"><span class="toc-text">Call by reference</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#move"><span class="toc-text">move()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reset"><span class="toc-text">reset()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shared-ptr%EC%9D%98-%EC%A3%BC%EC%9D%98%ED%95%A0-%EC%A0%90"><span class="toc-text">shared_ptr의 주의할 점</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unique-ptr"><span class="toc-text">unique_ptr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol>
     </div>
   </div>
 
