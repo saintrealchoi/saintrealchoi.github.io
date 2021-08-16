@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="author" content="zchengsite, 1451426471@qq.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  
+  <title>[Paper Reivew] E01. Detection of Abandoned and StolenObjects based on Dual BackgroundModel and Mask R-CNN | 성진이의 기술 블로그</title>
+
+  
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/github-markdown.css">
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+  <!-- jquery3.3.1 -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- fancybox -->
+  <link href="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet">
+  <script async src="https://cdn.bootcss.com/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img no-lazy src="/images/avatar.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">성진이의 기술 블로그</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">Home</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">Posts</a>
+        </li>
+      
+        <li class="nav-item" data-path="/categories/">
+          <a href="/categories/">Categories</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">Tags</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">About</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">[Paper Reivew] E01. Detection of Abandoned and StolenObjects based on Dual BackgroundModel and Mask R-CNN</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+          2021-08-16
+        </span>
+        
+              <span class="post-categories">
+                <i class="iconfont icon-bookmark" title="카테고리"></i>
+                
+                <span class="span--category">
+                  <a href="/categories/Paper-Review/" title="Paper Review">
+                    <b>#</b> Paper Review
+                  </a>
+                </span>
+                
+              </span>
+          
+              <span class="post-tags">
+                <i class="iconfont icon-tags" title="태그"></i>
+                
+                <span class="span--tag">
+                  <a href="/tags/Mask-R-CNN/" title="Mask R-CNN">
+                    <b>#</b> Mask R-CNN
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/background-subtraction/" title="background subtraction">
+                    <b>#</b> background subtraction
+                  </a>
+                </span>
+                
+                <span class="span--tag">
+                  <a href="/tags/Detection-of-Abandoned-and-Stolen-Objects/" title="Detection of Abandoned and Stolen Objects">
+                    <b>#</b> Detection of Abandoned and Stolen Objects
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Detection-of-Abandoned-and-Stolen-Objects-Based-on-Dual-Background-Model-and-Mask-R-CNN"><a href="#Detection-of-Abandoned-and-Stolen-Objects-Based-on-Dual-Background-Model-and-Mask-R-CNN" class="headerlink" title="Detection of Abandoned and Stolen Objects Based on Dual Background Model and Mask R-CNN"></a>Detection of Abandoned and Stolen Objects Based on Dual Background Model and Mask R-CNN</h1><br/>
+
+
+
+<blockquote>
+<p>이번 포스트에서는 CCTV를 이용하여 시스템을 설계하는 팀으로써 유기, 분실, 도난 등의 AI 도입을 위한 최신 논문에 대한 리뷰를 진행해봅니다.</p>
+</blockquote>
+<br/>
+
+
+
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><br/>
+
+
+
+<p>최근, surveillance system에 AI기술을 접목시킨 기술이 자주 등장하고 있습니다. 침입, 화재, 배회 등에 대한 대응속도를 최소화 하는데 좋은 기술이 될 것입니다.</p>
+<br/>
+
+
+
+<p>그럼에도 불구하고, 전통적인 시스템들은 정확도나 성능측면에서 한계점을 띄고 있었습니다.</p>
+<br/>
+
+
+
+<p>하지만,  최근 AI 기술들의 진보는 다양한 응용분야에 좋은 영향력을 끼치고 있습니다.그러므로 이 논문에서는 유기되거나(abandoned) 도난당한(stolen) 물체들을 전통적인(conventional) 배경추출 기술을 통해 background와 foreground를 실시간으로 생성해내고 foreground에서는 유기된 물품을, background에서는 도난당한 물품을 검출하는 시스템을 소개합니다.</p>
+<br/>
+
+
+
+<p>또한, 그림자 영역의 경우 foreground에서 유기되거나 도난당한 물품이 아님에도 불구하고 나타나는 경우가 있습니다. 이러한 부분을 개선하고자 합니다.</p>
+<br/>
+
+
+
+<h2 id="PROPOSED-ALGORITHM-FOR-DETECTING-ABANDONED-OBJECT-AND-STOLEN-OBJECT"><a href="#PROPOSED-ALGORITHM-FOR-DETECTING-ABANDONED-OBJECT-AND-STOLEN-OBJECT" class="headerlink" title="PROPOSED ALGORITHM FOR DETECTING ABANDONED OBJECT AND STOLEN OBJECT"></a>PROPOSED ALGORITHM FOR DETECTING ABANDONED OBJECT AND STOLEN OBJECT</h2><br/>
+
+
+
+<h3 id="DUAL-BACKGROUND-MODEL-FOR-EXTRACTING-STATIONARY-OBJECTS"><a href="#DUAL-BACKGROUND-MODEL-FOR-EXTRACTING-STATIONARY-OBJECTS" class="headerlink" title="DUAL BACKGROUND MODEL FOR EXTRACTING STATIONARY OBJECTS"></a>DUAL BACKGROUND MODEL FOR EXTRACTING STATIONARY OBJECTS</h3><br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/3-Figure1-1.png" width = 400px/>
+
+
+
+
+
+<br/>
+
+
+
+<p>이 논문에서는 특이하게 background subtraction을 두가지 모델로 하였습니다. 한가지는 short-term model, 다른 한가지는 long-term model이라고 하였습니다.</p>
+<br/>
+
+
+
+<p>두 가지의 모델로 나눈 이유는 <strong>누군가가 잠시 짐을 내려놓았을 때</strong>의 예외사항을 방지하기 위해서입니다. </p>
+<br/>
+
+
+
+<ol>
+<li>short-term model<ul>
+<li>SB(Short-term Background) : 유기된 물품은 빠르게 SB에 나타난다.</li>
+<li>SF(Short-term Foreground) : 현재 움직이고 있는 객체들이 존재</li>
+</ul>
+</li>
+<li>Long-term model<ul>
+<li>LB(Long-term Background) : </li>
+<li>LF(Long-term Foreground) : 정적인 물체(움직임이 약간이라도 존재하는)가 존재</li>
+</ul>
+</li>
+</ol>
+<p align="center">DF(Difference Foreground) : LF - SF, 정적인 물체들만 존재 </p>
+
+
+
+
+
+<br/>
+
+
+
+
+
+<p>단, 이때 일정 임계점 이하의 객체들은 noise라 판단하여 지워진다. 또한, Long-term 과 Short-term을 구분하다보니 당연히 single frame으로는 판단이 불가능하다는 것이 논문의 설명입니다.</p>
+<br/>
+
+
+
+<p>위의 dual background subtraction을 통해 우리는 **Stationary Object(정적인 물체)**를 구분할 수 있게 되었습니다. 그렇다면 이제 이 정적인물체를 유기되거나 도난당하거나 그림자영역인지 확인하는 절차가 필요합니다.</p>
+<br/>
+
+
+
+<h3 id="ISSUE-OF-DISCRIMINATION-BETWEEN-ABANDONED-AND-STOLEN-OBJECT"><a href="#ISSUE-OF-DISCRIMINATION-BETWEEN-ABANDONED-AND-STOLEN-OBJECT" class="headerlink" title="ISSUE OF DISCRIMINATION BETWEEN ABANDONED AND STOLEN OBJECT"></a>ISSUE OF DISCRIMINATION BETWEEN ABANDONED AND STOLEN OBJECT</h3><br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/4-Figure2-1.png" width = 400px/>
+
+
+
+
+
+
+
+<br/>
+
+
+
+<p>비록 앞선 dual background model이 정적인 물체를 추출하는 것은 쉽지만 유기된 물품인지 도난당한 물품인지 구분하는 것은 foreground에서 비교하는게 쉽지 않습니다.</p>
+<br/>
+
+
+
+<p>DF에 나오는 객체로만 판단을 한다면 1번과 2번예제의 차이점을 구분할 수 없습니다. 하지만, 1번예제는 누군가 놓고간 객체이며 2번예제는 도난당한 객체입니다. 따라서 이를 구분해야합니다.</p>
+<br/>
+
+
+
+
+
+<h3 id="THE-PROPOSED-ALGORITHM"><a href="#THE-PROPOSED-ALGORITHM" class="headerlink" title="THE PROPOSED ALGORITHM"></a>THE PROPOSED ALGORITHM</h3><br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/5-Figure5-1.png" width = 400px/>
+
+
+
+
+
+<br/>
+
+
+
+<p>이 논문에서 소개한 알고리즘은 다음과 같습니다.</p>
+<br/>
+
+
+
+<ol>
+<li><p>dual background model을 통해 DF에서 정지된 객체를 추출한다. (Candidate Static Object DF : CSO_DF)</p>
+<ul>
+<li>이때, 일정 크기 이하의 blobs는 노이즈로 처리하여 지운다.</li>
+<li>checking the stability of a blob : blobs들이 반복적으로 같은 위치에 나타날 수 있으므로 연속적인 프레임에서 일정 숫자 이상 나타나면 stable하다고 정의한다.</li>
+</ul>
+</li>
+<li><p>동시에, Mask R-CNN을 이용하여 현재 프레임에서 object mask를 얻는다. (Segmented Object : SO_VF)</p>
+</li>
+<li><p>CSO_DF와 SO_VF가 동일한지 확인한다. 동일할 시 이것은 유기된 물품이다.</p>
+<ul>
+<li>만약 동일하지 않을시<ul>
+<li>이전 LB frames들 중에서 CSO_DF가 background로 흡수되지않은 가장 최근 LB프레임을 추출한다. 이 때, SO_LB가 존재하지 않는다면 유기된 물품이다.</li>
+<li>CSO_LB프레임에서 object segmentation을 진행하여 SO_LB를 추출하여 SO_VF와 비교한다.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<br/>
+
+
+
+<img src ="https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/6-Figure6-1.png" width = "1000px"/>
+
+
+
+
+
+
+
+<br/>
+
+
+
+<p>전체적인 플로우 차트는 위와 같습니다.</p>
+<br/>
+
+
+
+<p>이 때, 마스크끼리의 동일성 여부 판단은 다음과 같은 식을 기준으로 합니다.</p>
+<br/>
+
+
+
+<p>CSO_DF의 top, left, width, and height는 ‘t’, ‘l’, ‘w’, ‘h’라 할 때, CSO_DF의 mask는 다음과 설정합니다.</p>
+<br/>
+
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/equation1.jpg" alt="equation1"></p>
+<br/>
+
+
+
+<p>다음으론 Mask R-CNN으로 감지된 mask에 관한 설정입니다.</p>
+<br/>
+
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/equation2.jpg" alt="equation2"></p>
+<br/>
+
+
+
+<p>앞선 두 mask의 픽셀값이 동일하면 1, 동일하지 않다면 0으로 set하는 match score mask는 다음과 같이 설정합니다.</p>
+<br/>
+
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/equation3.jpg" alt="image-20210803090303010"></p>
+<br/>
+
+
+
+<p>결론적으로 match score는 다음과 같습니다.</p>
+<br/>
+
+
+
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAMAAABOo35HAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC9UExURVlZWdPT07KysmRkZIWFhfT09JmZmWZmZm9vb39/fxkZGUxMTDMzM3p6epCQkKamppubm729venp6cjIyN7e3tbW1s/Pz8LCwnx8fLS0tFZWVoiIiI+Pj6GhoeTk5Glpabu7u93d3evr66CgoJSUlKqqqsnJyeDg4Hd3d8PDw+Xl5bi4uNHR0dvb26Ojo6urq+fn51hYWDg4OCgoKHBwcK2traenp0FBQe7u7vHx8U5OTre3t8zMzHV1df///7GrnpQAAAA/dFJOU///////////////////////////////////////////////////////////////////////////////////AI4mfBcAAAUGSURBVHja7NoJb6M4GMZxY0NCD64kve/pMZ2d3Z297+X7f6zFNmBAMUXa6URl/q9UJSWPUPzrizFWRUlNLgEBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYYIEFAVhggQUWWGBBABZYYIEFFlgQgAUWWGCBBRYEYIEFFlhggQUBWGCBBRZYYEEAFlhggQUWWBCABRZYYIEFFgRggQUWWGCBBQFYYIEFFlhgQQAWWGCBBRZYEIAFFlhggQUWBGCBBRZYn6cCIcRXgvX/h9qcIVBqDdbEM8RCxGCB9QqXYRwHYDHBgwXWl8eKZKiESHI3Ba1kWs3fKixcaJUl1YyeBm7Ocq+yLItUiVBGnXxenSHJolIKEcwHq6ikbOX1YGVzQCTN8LPmSLreghUl9sN4Uw7yajMrLC0TZ1ImzqY6FEop0+pIaEN5HaoOxVuwEqFyc4I46uSlzOLqgxlh6UaR9l3VYWl9Fdoxb1Q90KJtu41pwwFW/WHhTtW8i7TafLCqRsk6bsGw63L9qurXRmuIlbT9lDQnlXU+nBFW1Q2qnZbDprWa2tjR90LZFqx1/+Td/HpGWLlrLDvIwTcx6dQ1Vrntbig68cDms3JwbA5Y1azs1ger6sNV/bbIw1jU81MvNAGrl58RVn8ozW+btF08iGFoAlYvP3csfVur1gJBEIA1uBmue5dhZDOyO2epbmgCVi8/I6x0MMHH9pjsTfBhNzQBq5uPZoQlB0uH3DZG4EZqQ26fL3sZq5uf09Ih6qw3i/pm6BZO0qZX7rrUS68Xsbr5ZE4rePMk08pk9aUZugfqppvs6AM1Acvlo/StP+6EbW06z8hJqxbYp2BZPQUnFsLsKuhQdaHqn5ewbF7KXIn0jWO5MqOQ7RaNLPtbNMmmhimj0GUmYLl8Gs0Lq4wyPbTu1l2QKqHSouzs3OlDIslW5SQsnY/NXmFplyNvEuuLV/Tau9BzwiraDUSwXmysztYWWNtL1psXeumgIrDGaqXvBfUuvtqUYI3V2t1wk1e2msFluJJm6zDJXv/fIfjPP7DAAgsssCiwwAILLLDAosACCyywwAKLAgsssMACC6zt9fDz/v75tyOB+98PD2+ORgKffjw4OP1uJPDxl+Xy8v1I4MPF3t7VNyOB4/vF4uzdzrG+39f1kz/w66Guv/yBvw90KX/gZKkr8Qf+2dOV+gNHC12/7RxrabD2/a31bLAO/a11YbAO/K21MFhLf2s9Gqw9f2vdGqzFu11jnVusE2/gxmI9eQOnFuvYG7i0WH7uK4t15w2cWazrXWP9a7H8f/bQYvm/6IPF+sF/pVssf19Ii/WH/0K2WH/uGuvEWC39gSdj9Twy+Rqri5EZx1gt/IE7Y/XoD1wbq9vd3w1PlufnD2OBp+ebm/uxwPHF6emnscDR4vLy41jg7vHq6sNY4Pr27OyYdRaLUrDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssMCiwAILLLDAAosCCyywwAILLAossMACCyywKLDAAgsssL6u+k+AAQCR9eHtLKvLfwAAAABJRU5ErkJggg==" data-original="/image/equation4.jpg" alt="equation4"></p>
+<br/>
+
+
+
+<p>mach score가 일정 threshold보다 높다면 이 둘은 같은 물체이므로 </p>
+<br/>
+
+
+
+<p>하지만, 다를 경우에는 다음과 같은 경우의 수가 있습니다.</p>
+<br/>
+
+
+
+<blockquote>
+<ol>
+<li>둘의 사이즈가 굉장히 다르다. 이는 대개 CSO_DF의 문제일 가능성이 높다. background subtraction은 shadow region과 같은 영역이 foreground에 나타나 실제 CSO_DF에 나타난 물체보다 크게 측정될 수 있기 때문이다.</li>
+<li>객체가 없을 수도 있다. 과거와 현재에 다른 모양(상태)일 수 있기 때문에 match score는 반드시 CSO_DF의 최종상태로 측정되어야한다.</li>
+</ol>
+</blockquote>
+<br/>
+
+
+
+<p>다음은 그림자영역인지 도난당한 물건인지 유기된 물건인지 구별하는 방법입니다.</p>
+<br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/7-Figure7-1.png" width = 600px />
+
+
+
+
+
+
+
+<br/>
+
+
+
+<p><strong>구별 방법</strong></p>
+<blockquote>
+<ol>
+<li>정적인 물체가 나타난다.(CSO_DF)</li>
+<li>이전에는 존재하지 않았어야한다.</li>
+<li>stable blob(CSO_DF)영역에 물체가 존재하는지 현재 프레임에서 Mask R-CNN을 이용하여 구별한다.</li>
+<li>일정 match score보다 높다면 abandoned object이다. ( 위의 (1)의 경우 )</li>
+</ol>
+<ul>
+<li>일정 match score보다 낮다면 다음의 순서를 따른다.<ol>
+<li>이전 LB frame에서 CSO_DF가 처음으로 생성되는 프레임을 찾는다.</li>
+<li>Mask R-CNN을 이용하여 SO_LB를 찾고, 없다면 이는 abandoned object이다. 왜나하면 ghost region이기 때문이다. ( 위의 (2)의 경우 )</li>
+<li>SO_LB가 있을때,<ol>
+<li>SO_VF와 동일하다면 이는 현재 그림자가 생긴것이므로 ghost region이다. ( 위의 (4)의 경우 )</li>
+<li>SO_VF보다 작다면 이는 작은 물체가 존재한 것이므로 abandoned object이다. ( 위의 (3)의 경우)</li>
+<li>SO_VF보다 크다면 이는 과거에 있던 물체가 현재는 사라진 것이므로 stolen object이다. ( 위의 (5), (6)의 경우 )</li>
+</ol>
+</li>
+<li>SO_LB가 현재일 때, 크기에 관계없이 모두 stolen object이다. ( 위의 (8), (9)의 경우 )</li>
+</ol>
+</li>
+<li>CSO_DF는 존재하지만 SO_VF도 SO_LF도 생성되지 않는다면 이는 Ghost region이다. ( 위의 (7)의 경우, 아래 예시에서 참조 )</li>
+</ul>
+</blockquote>
+<br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/5-Figure4-1.png" width = "800px" />
+
+
+
+
+
+
+
+<br/>
+
+
+
+<h3 id="DETERMINING-THE-FINAL-STATE-OF-A-STATIONARY-OBJECT-ABANDONED-STOLEN-OBJECT-AND-GHOST-REGION-USING-THE-DUAL-BACKGROUND-MODEL-AND-MASK-R-CNN"><a href="#DETERMINING-THE-FINAL-STATE-OF-A-STATIONARY-OBJECT-ABANDONED-STOLEN-OBJECT-AND-GHOST-REGION-USING-THE-DUAL-BACKGROUND-MODEL-AND-MASK-R-CNN" class="headerlink" title="DETERMINING THE FINAL STATE OF A STATIONARY OBJECT (ABANDONED, STOLEN OBJECT, AND GHOST REGION) USING THE DUAL BACKGROUND MODEL AND MASK R-CNN"></a>DETERMINING THE FINAL STATE OF A STATIONARY OBJECT (ABANDONED, STOLEN OBJECT, AND GHOST REGION) USING THE DUAL BACKGROUND MODEL AND MASK R-CNN</h3><br/>
+
+
+
+<p>지금부터는 위에 설명한 시나리오에 대한 예시입니다.</p>
+<br/>
+
+
+
+<ol>
+<li>Stolen object detection when a CSO_DF is identical to a SO_LB, which corresponds to the case of Figure 7-(8).</li>
+</ol>
+<img src ="https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/8-Figure9-1.png" width = 800px />
+
+
+
+<p>(4)번에서 DF 프레임에서 CSO_DF가 추출이 가능합니다. 이제 감시시스템은 <strong>back-trace</strong>를 하게 되는데 현재 SO_VF에는 아무것도 존재하지 않으므로 SO_LB가 현재이므로 이는 stolen object입니다.</p>
+<br/>
+
+
+
+<ol start="2">
+<li>Stolen object detection when a CSO_DF is larger than a SO_LB, which corresponds to the case of Figure 7-(9).</li>
+</ol>
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/8-Figure10-1.png" width = 800px/>
+
+
+
+<p>(3)번 DF프레임에서 CSO_DF가 추출이 가능합니다. 마찬가지로 back-trace를 하여 SO_LB가 현재임을 확인할 수 있고 SO_VF에는 아무것도 존재하지 않으므로 이는 stolen object입니다. CSO_DF에는 그림자가 포함되어 SO_LB와 matchscore가 낮지만 이에 관계없이 stolen object로 구별합니다.</p>
+<br/>
+
+
+
+<ol start="3">
+<li>Another example of stolen object detection when a CSO_DF is larger than a SO_LB, which corresponds to the case of Figure 7-(9). And this figure also shows a ghost region detection in the absence of both the SOVF and SOLB, which corresponds to the case of Figure 7-(7).</li>
+</ol>
+<br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/8-Figure11-1.png" width = 800px/>
+
+<p>(3)번 DF프레임에서 CSO_DF가 추출이 가능합니다. 마찬가지로 back-trace를 하여 SO_LB가 현재임을 확인할 수 있고 SO_VF에는 아무것도 존재하지 않으므로 이는 stolen object입니다. 빛의 방향에 따라 ghost region이 foreground에 포함되어 나타나는 것을 확인할 수 있지만 이는 모두 SO_VF와 SO_LB에 나타나지 않으므로 ghost region으로 분류가 가능해집니다.</p>
+<br/>
+
+
+
+<ol start="4">
+<li>Stolen object detection when a CSO_DF does not match a SO_VF and the SO_VF is smaller than a SO_LB, which corresponds to the case of Figure 7-(6).</li>
+</ol>
+<br/>
+
+
+
+<img src = "https://d3i71xaburhd42.cloudfront.net/842e00782fa8eb6e8bb9dbe14d0895f03e0c7922/8-Figure12-1.png" width = 800px/>
+
+
+
+<p>(4)번 DF프레임에서 CSO_DF가 추출이 가능합니다. 다시 back-trace를 하는데 SO_LB가 SO_VF보다 크므로 원래 있던 물체 뒤에 있는 물체이거나 훔친사람이 작은 물건을 대체해 놓은 것이므로 도난상태가 될 것입니다.</p>
+<br/>
+
+
+
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><br/>
+
+
+
+<p>기존 CCTV 감시 시스템은 버려진 물체가 훔친 물건 혹은 Ghost region을 오탐하는 경우가 많았습니다. 따라서, 위의 세가지 사례를 정확히 구분하는 알고리즘을 제시하였습니다.</p>
+<br/>
+
+
+
+<p>CSO_DF, SO_VF, SO_LB와 같은 영역에 대한 비교분석 결과에 따라 배경제거영상에서 후보 객체들을 정확히 구분할 수 있게 되었습니다.</p>
+<br/>
+
+<hr>
+<br/>
+
+
+
+<p>현재 회사에서 CCTV로 유기물체를 검출하는 알고리즘을 설계중에 있습니다. 위의 기술된 Mask R-CNN의 경우 실시간이라고 하기엔 부족한 FPS를 가지고 있으므로 적합하지 않은 CNN 모델이라고 생각합니다. 하지만, YOLO 모델을 이용할 경우 훨씬 나은 성능을 보여주고 있습니다. </p>
+<br/>
+
+
+
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><br/>
+
+
+
+<p><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9079525">Detection of Abandoned and Stolen Objects Based on Dual Background Model and Mask R-CNN</a></p>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2021/07/21/cpp-02/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>PREV</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime" title="업데이트 시간"></i>
+              2021-08-16
+            </span>
+            
+                  <span class="post-categories">
+                    <i class="iconfont icon-bookmark" title="카테고리"></i>
+                    
+                    <span class="span--category">
+                      <a href="/categories/Paper-Review/" title="Paper Review">
+                        <b>#</b> Paper Review
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags" title="태그"></i>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Mask-R-CNN/" title="Mask R-CNN">
+                        <b>#</b> Mask R-CNN
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/background-subtraction/" title="background subtraction">
+                        <b>#</b> background subtraction
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag">
+                      <a href="/tags/Detection-of-Abandoned-and-Stolen-Objects/" title="Detection of Abandoned and Stolen Objects">
+                        <b>#</b> Detection of Abandoned and Stolen Objects
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div class="post-catalog" id="catalog">
+    <div class="title">목록</div>
+    <div class="catalog-content">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Detection-of-Abandoned-and-Stolen-Objects-Based-on-Dual-Background-Model-and-Mask-R-CNN"><span class="toc-text">Detection of Abandoned and Stolen Objects Based on Dual Background Model and Mask R-CNN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PROPOSED-ALGORITHM-FOR-DETECTING-ABANDONED-OBJECT-AND-STOLEN-OBJECT"><span class="toc-text">PROPOSED ALGORITHM FOR DETECTING ABANDONED OBJECT AND STOLEN OBJECT</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DUAL-BACKGROUND-MODEL-FOR-EXTRACTING-STATIONARY-OBJECTS"><span class="toc-text">DUAL BACKGROUND MODEL FOR EXTRACTING STATIONARY OBJECTS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ISSUE-OF-DISCRIMINATION-BETWEEN-ABANDONED-AND-STOLEN-OBJECT"><span class="toc-text">ISSUE OF DISCRIMINATION BETWEEN ABANDONED AND STOLEN OBJECT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#THE-PROPOSED-ALGORITHM"><span class="toc-text">THE PROPOSED ALGORITHM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DETERMINING-THE-FINAL-STATE-OF-A-STATIONARY-OBJECT-ABANDONED-STOLEN-OBJECT-AND-GHOST-REGION-USING-THE-DUAL-BACKGROUND-MODEL-AND-MASK-R-CNN"><span class="toc-text">DETERMINING THE FINAL STATE OF A STATIONARY OBJECT (ABANDONED, STOLEN OBJECT, AND GHOST REGION) USING THE DUAL BACKGROUND MODEL AND MASK R-CNN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Conclusion"><span class="toc-text">Conclusion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference"><span class="toc-text">Reference</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        <div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          <a title="github" target="_blank" rel="noopener" href="https://github.com/saintrealchoi">
+            <i class="iconfont icon-github"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="instagram" href="">
+            <i class="iconfont icon-instagram"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a title="rss" href="/atom.xml">
+            <i class="iconfont icon-rss"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © Oranges 2020</a>
+    </div>
+  
+    <div class="footer-more">
+      <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="back-to-top hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+      
+  <div class="search-icon" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="검색">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>첫 번째 검색, 인덱스 파일을 불러오고 있습니다. 잠시 후 …<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>검색어를 찾을 수 없습니다. 검색어를 바꿔 보세요<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+    </div>
+  <script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=i;var e=n.imageLazyLoadSetting.isSPA,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function i(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight||document.documentElement.clientHeight)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},n.src=i}()}i(),n.addEventListener("scroll",function(){var t,e;t=i,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body>
+</html>
