@@ -4,7 +4,36 @@
   
     
     <entry>
-      <title>[Paper Reivew] E01. Detection of Abandoned and StolenObjects based on Dual BackgroundModel and Mask R-CNN</title>
+      <title>[Paper Review] E02. YOLOX: Exceeding YOLO Series in 2021</title>
+      <link href="2021/08/17/paper-review-01/"/>
+      <url>2021/08/17/paper-review-01/</url>
+      
+        <content type="html"><![CDATA[<h1 id="YOLOX-Exceeding-YOLO-Series-in-2021"><a href="#YOLOX-Exceeding-YOLO-Series-in-2021" class="headerlink" title="YOLOX: Exceeding YOLO Series in 2021"></a>YOLOX: Exceeding YOLO Series in 2021</h1><br/><br/><p><img src="/image/TITLE.png" alt="TITLE"></p><br/><br/><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><br/><br/><p>YOLO 시리즈는 항상 속도와 정확도간의 최적의 trade-off를 갖는 것을 추구했습니다. 하지만 현재 one-stage object detector들은 모두 anchor-free를 추구하고 더 나은 레이블기법들을 사용하고 있습니다. </p><br/><br/><p>따라서, anchor-free를 만족시키는 것을 목표로 YOLOX를 개발하게 되었습니다. YOLOX의 베이스는 YOLOv3-SPP에서 시작되었습니다. </p><br/><br/><p>그 결과 YOLOX는 YOLOv3(44.3% AP)보다 높은 50.0%AP를 달성하였으며 YOLOv4-Tiny에 대응할만한 YOLOX-Nano는 10%AP 앞서게 되었습니다.</p><br/><br/><h2 id="YOLOX"><a href="#YOLOX" class="headerlink" title="YOLOX"></a>YOLOX</h2><br/><br/><h3 id="YOLOX-DarkNet53"><a href="#YOLOX-DarkNet53" class="headerlink" title="YOLOX-DarkNet53"></a>YOLOX-DarkNet53</h3><br/><br/><ol><li>Implementation details</li></ol><ul><li>SGD(Stochastic Gradient Descent)</li><li>Learning Rate = lr * BatchSize/64(linear scaling, initial = 0.01, cosine lr schedule)</li><li>wegith decay = 0.0005, SGD momentum = 0.9</li><li>Batch Size = 128</li></ul><br/><br/><ol start="2"><li>YOLOv3 baseline</li></ol><ul><li>backbone = DarkNet53, SPP layer</li><li>EMA weights updating</li><li>cosine lr schdule</li><li>IoU loss for training <code>reg</code> brannch</li><li>BCE Loss for training <code>cls</code>, <code>obj</code> branch</li><li>Augmentation = RandomHorizontalFlip, ColorJitter</li></ul><br/><br/><ol start="3"><li>Decoupled head</li></ol><ul><li>아래와 같이 anchor사이즈별로 class와 offset들과 객체 유무를 판단하는 것이 아니라 각각 다르게 loss를 계산하는 decopuled head를 제안하게 되었습니다.</li><li>channel dimension을 줄이기 위해  1 X 1 conv layer를 추가하고 그 뒤에 두개의 3x3 conv layer를 추가한 형태를 띄게 됩니다.</li></ul><br/><br/><p><img src="/image/decoupled.png" alt="decoupled"></p><br/><br/><ol start="4"><li>Strong data augmentation</li></ol><ul><li>Mosaic and MixUp기법을 사용하였는데 이는 포스트 후반부에 어떻게 적용시켰는지 확인해보겠습니다.</li><li>NO PRE-TRAINING ImageNet</li></ul><br/><br/><ol start="5"><li>Anchor-free</li></ol><ul><li><p>YOLOv4와 YOLOv5는 YOLOv3에서 파생된 anchor-based 파이프라인을 따르지만 anchor-based 파이프라인은 몇가지 문제가 존재합니다.</p><ol><li>최적의 검출 성능을 위해서 학습 이전에 클러스터링 과정을 통해 anchor size를 설정해야합니다.</li><li>detection head에 복잡성을 더하게 됩니다.<ul><li>이는 많은 양의 추론을 위해 NPU에서 GPU로 이동할 경우 큰 오버헤드를 갖게됩니다.</li></ul></li></ol></li><li><p>기존의 3개의 anchor를 regression하는 것이 아닌 1개의 box를 예측하게 되는데 이는 left-top corner of the grid의 offset과 predicted box의 width와 height을 찾게 됩니다.</p></li><li><p>이는 parameter들과 GFLOP들을 줄여주지만 더 나은 성능을 가지게 됩니다.</p></li></ul><br/><br/><ol start="6"><li>Multi positives</li></ol><ul><li>위의 anchor-free방법을 적용할 경우 오직 한개의 positive sample을 예측하게 되고 이는 곧 많은 negative sample이 나와 굉장히 큰 불균형을 초래하게 됩니다. </li><li>따라서, FCOS의 “center sampling”을 통해 the center 3 X 3 area를 positive sample로 할당합니다.</li></ul><br/><br/><ol start="7"><li>SimOTA</li></ol><ul><li><p>더 나은 레이블링을 위해 OTA는 다음과 같은 4개의 레이블링 기법을 제안합니다.</p><ol><li>loss/quality aware</li><li>center prior</li><li>dynamic number of positive anchors</li><li>global view</li></ol></li><li><p>그러나, Sinkhorn-Knopp 알고리즘을 OT(Optimal Transport)문제에 적용시켰을 경우 25%(300 epochs)의 추가적인 학습시간이 걸리게 되므로 이를 dynamic top-k startegy(named SimOTA)로 정의하게 되었습니다.</p></li><li><p>SimOTA는 matching degree를 계산하게 되는데 이는 아래와 같은 식으로 계산합니다.</p></li></ul><br/><br/><p><img src="/image/equation.png" alt="equation"></p><br/><br/><ul><li>여기서 <code>lambda</code>는 불균형을 해소하기 위한 계수이고 <code>우변</code>은 GT와 prediction값 사이의 classification loss와 regression loss를 의미합니다.</li><li>이 때, 각각의 GT에 대해 가장 적은 cost값을 갖는 고정된 center region중 top k predictions들을 positives라고 하고 나머지를 모두 negative로 합니다. 이 때, k는 GT에 대해 모두 다른 값을 갖습니다.</li></ul><br/><br/><ol start="8"><li>End-to-end YOLO</li></ol><ul><li>one-to-one label assignment와 stop gradient 두개의 conv layer를 추가했지만 이는 성능저하로 이어져 옵션으로 주고 최종 결과물에 포함시키지 않았습니다.</li></ul><br/><br/><h3 id="Other-Backbones"><a href="#Other-Backbones" class="headerlink" title="Other Backbones"></a>Other Backbones</h3><br/><br/><p>DarkNet53이외에 다양한 backbones들을 적용시켜보았습니다.</p><br/><br/><ol><li>Modified CSPNet in YOLOv5</li></ol><ul><li>YOLOv5에 적용된 CSPNet, SiLU activation, PAN head를 적용시킨 YOLOX-S,YOLOX-M,YOLOX-X 모델을 비교할 경우 약간의 시간을 trade-off 하여 각각 1~3% AP 향상 효과를 얻게 되었습니다.</li></ul><br/><br/><ol start="2"><li>Tiny and Nano detectors</li></ol><ul><li>YOLOv4-Tiny 모델과 비교하기 위해 YOLOX-Tiny모델을 구상하였을 때 아래의 표와 같이 더 나은 성능을 얻게 되었습니다.</li></ul><br/><br/><p><img src="/image/tiny.png" alt="tiny"></p><br/><br/><ol start="3"><li>Model size and data augmentation</li></ol><ul><li><p>모든 모델들은 같은 learning schedule과 optimizing parameters들을 갖고 있습니다. 그러나, 모델의 크기별로 다른 적절한 augmentation 기법을 적용시켜야하는 것을 확인했습니다.</p></li><li><p>예를들어, MixUp과 같은 기법들은 YOLOX-L에서는 0.9% AP상승을 유도했지만 작은모델인 YOLOX-Nano와 같은 모델에는 성능저하를 유도했습니다. 따라서, mosaic 비율을 줄이고 mix up augmentation을 삭제하였습니다.</p></li><li><p>큰 모델의 경우 stronger augmentation기법이 더 효과적인 것을 확인했습니다. 우리가 새로 구현한 MixUp기법이 기존보다 더 나은 성능을 보장했고 Copypaste기법으로부터 영감을 받아 mix up하기 전에 random sample scale factor를 통해 이미지를 jitter하는 방법을 사용했습니다.</p></li></ul><br/><br/><h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><br/><br/><p>기존의 YOLO 시리즈에 anchor free를 적용시킨 detector를 소개하였습니다. decoupled head, anchor-free, and advanced label assigning strategy를 적용시킨 YOLOX는 속도와 정확도에 더 나은 trade-off를 얻게 되었습니다. </p><br/><br/><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol><li><a href="https://arxiv.org/abs/2107.08430">YOLOX: Exceeding YOLO Series in 2021</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Paper Review </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> YOLO </tag>
+            
+            <tag> YOLOX </tag>
+            
+            <tag> Object Detection </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>[Paper Review] E01. Detection of Abandoned and StolenObjects based on Dual BackgroundModel and Mask R-CNN</title>
       <link href="2021/08/16/paper-review-00/"/>
       <url>2021/08/16/paper-review-00/</url>
       
